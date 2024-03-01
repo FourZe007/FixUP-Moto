@@ -1,0 +1,560 @@
+import 'dart:convert';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:fixupmoto/widget/carousel/vehicle_notifier.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:fixupmoto/global/api.dart';
+import 'package:fixupmoto/global/global.dart';
+import 'package:fixupmoto/global/model.dart';
+import 'package:fixupmoto/widget/button/button.dart';
+import 'package:fixupmoto/widget/image/customimage.dart';
+import 'package:fixupmoto/widget/label_title_static.dart';
+import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
+import 'package:image/image.dart' as images;
+
+// ignore: must_be_immutable
+class ModifyVehicle extends StatefulWidget {
+  ModifyVehicle(this.mode, this.handle, {this.index = 0, super.key});
+
+  int mode;
+  Function handle;
+  int index;
+
+  @override
+  State<ModifyVehicle> createState() => MmodifyVehicleState();
+}
+
+class MmodifyVehicleState extends State<ModifyVehicle> {
+  String memberID = '';
+  String plateNo = '';
+  String unitID = '';
+  String chasisNo = '';
+  String engineNo = '';
+  String color = '';
+  String year = '';
+  String photo = '';
+  int line = 0;
+
+  XFile? pickedFile;
+  String base64Image = '';
+  Image? displayImage;
+
+  Color inkColor = Colors.white;
+
+  List<ModelResultMessage> listNewVehicle = [];
+  List<ModelVehicleDetail> list = [];
+
+  bool isLarger = false;
+
+  void setMemberID(String value) {
+    memberID = value;
+  }
+
+  void setPlateNo(String value) {
+    plateNo = value;
+  }
+
+  void setUnitID(String value) {
+    unitID = value;
+  }
+
+  void setChasisNo(String value) {
+    chasisNo = value;
+  }
+
+  void setEngineNo(String value) {
+    engineNo = value;
+  }
+
+  void setColor(String value) {
+    color = value;
+  }
+
+  void setYear(String value) {
+    year = value;
+  }
+
+  void setPhoto(String value) {
+    photo = value;
+  }
+
+  void setLine(int value) {
+    line = value;
+  }
+
+  void uploadImage() async {
+    // Pick image from gallery or camera
+    pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    // Check if image was picked
+    if (pickedFile == null) return null;
+
+    // Read image bytes
+    final imageBytes = await pickedFile!.readAsBytes();
+    // Resize image (optional)
+    images.Image? img = images.decodeImage(imageBytes);
+
+    if ((img!.width == img.height) || (img.width <= img.height)) {
+      isLarger = true;
+      setState(() {});
+      final snackBar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Please use horizontal image',
+          message: '',
+
+          /// change contentType to ContentType.success,
+          /// ContentType.warning or ContentType.help for variants
+          contentType: ContentType.warning,
+        ),
+      );
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    } else {
+      isLarger = false;
+      images.Image resized = images.copyResize(
+        img,
+        // ignore: use_build_context_synchronously
+        width: img.width.toInt(),
+        // ignore: use_build_context_synchronously
+        height: img.height.toInt(),
+      );
+
+      // Encode image to base64
+      base64Image = base64Encode(images.encodePng(resized));
+
+      print('base64Image: $base64Image');
+
+      // DISPLAY USER IMAGE
+      // Decode base64 string to bytes
+      Uint8List bytes = base64Decode(base64Image);
+
+      // Create Image object from bytes
+      displayImage = Image.memory(bytes);
+
+      // Display the image
+      setState(() {
+        displayImage = displayImage; // Update the state with the image
+      });
+    }
+  }
+
+  void submitData() async {
+    if (chasisNo == '') {
+      setChasisNo('-');
+    }
+    if (engineNo == '') {
+      setEngineNo('-');
+    }
+    if (color == '') {
+      setColor('-');
+    }
+    if (year == '') {
+      setYear('-');
+    }
+
+    if (plateNo != '' && unitID != '') {
+      print('Mode: ${widget.mode}');
+      print('Member ID: ${GlobalVar.listUserData[0].memberID}');
+      print('Plate Number: $plateNo');
+      print('Unit ID: $unitID');
+      print('Chasis Number: $chasisNo');
+      print('Engine Number: $engineNo');
+      print('Color: $color');
+      print('Year: $year');
+      if (widget.mode == 1) {
+        print('New Image: $base64Image');
+      } else if (widget.mode == 2) {
+        print('Edit Image: $photo');
+      }
+      print('Line: $line');
+
+      int colorLength = color.length;
+      int yearLength = year.length;
+      if (colorLength <= 15 && yearLength <= 4) {
+        print('Old Updated Data: ${GlobalVar.listVehicle[widget.index].color}');
+        listNewVehicle = await GlobalAPI.fetchModifyVehicle(
+          widget.mode.toString(),
+          'REGISTERMOTOR',
+          GlobalVar.listUserData[0].memberID,
+          plateNo,
+          unitID,
+          chasisNo != '' ? chasisNo : '-',
+          engineNo != '' ? engineNo : '-',
+          color != '' ? color : '-',
+          year != '' ? year : '-',
+          widget.mode == 1 ? base64Image : photo,
+          widget.mode == 1 ? 0 : line,
+        );
+
+        if (listNewVehicle[0].resultMessage == plateNo) {
+          // setState(() => widget.isChange = true);
+          // widget.handle();
+          // setState(() => GlobalVar.listVehicle);
+
+          setState(() => GlobalVar.isChange = true);
+          print('Before isChange: ${GlobalVar.isChange}');
+          list = await GlobalAPI.fetchGetVehicle();
+          VehicleChangeNotifier().notify(list);
+          setState(() => GlobalVar.isChange = false);
+          print('After isChange: ${GlobalVar.isChange}');
+          print(
+              'Newly Updated Data: ${GlobalVar.listVehicle[widget.index].color}');
+          // setState(() => widget.isChange = false);
+          // await GlobalAPI.fetchSetVehicle();
+
+          // setState(() => GlobalVar.isLoading = true);
+          // GlobalVar.listVehicle = [];
+          // GlobalVar.listVehicle = await GlobalAPI.fetchGetVehicle();
+          // setState(() {
+          //   GlobalVar.listVehicle;
+          // });
+          // setState(() => GlobalVar.isLoading = false);
+          // print('New Color: ${GlobalVar.listVehicle[i].color}');
+
+          // ignore: use_build_context_synchronously
+          Navigator.pop(context);
+
+          final snackBar = SnackBar(
+            /// need to set following properties for best effect of awesome_snackbar_content
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'SUCCESS!',
+              message: 'Data Berhasil di Update',
+
+              /// change contentType to ContentType.success,
+              /// ContentType.warning or ContentType.help for variants
+              contentType: ContentType.success,
+            ),
+          );
+
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        } else {
+          final snackBar = SnackBar(
+            /// need to set following properties for best effect of awesome_snackbar_content
+            elevation: 0,
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'FAILED!',
+              message: listNewVehicle[0].resultMessage,
+
+              /// change contentType to ContentType.success,
+              /// ContentType.warning or ContentType.help for variants
+              contentType: ContentType.failure,
+            ),
+          );
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
+      } else {
+        final snackBar = SnackBar(
+          /// need to set following properties for best effect of awesome_snackbar_content
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'WARNING!',
+            message: 'Panjang warna harus kurang dari sama dengan 15 huruf',
+
+            /// change contentType to ContentType.success,
+            /// ContentType.warning or ContentType.help for variants
+            contentType: ContentType.warning,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
+    } else {
+      final snackBar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'WARNING!',
+          message: 'Mohon periksa input anda kembali',
+
+          /// change contentType to ContentType.success,
+          /// ContentType.warning or ContentType.help for variants
+          contentType: ContentType.warning,
+        ),
+      );
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
+  }
+
+  void insertData() {
+    if (widget.mode == 2) {
+      // Edit Vehicle Data
+      print('Edit Data');
+
+      plateNo = GlobalVar.listVehicle[widget.index].plateNumber;
+      unitID = GlobalVar.listVehicle[widget.index].unitID;
+      chasisNo = GlobalVar.listVehicle[widget.index].chasisNumber;
+      engineNo = GlobalVar.listVehicle[widget.index].engineNumber;
+      color = GlobalVar.listVehicle[widget.index].color;
+      year = GlobalVar.listVehicle[widget.index].year;
+      photo = GlobalVar.listVehicle[widget.index].photo;
+      line = GlobalVar.listVehicle[widget.index].line;
+      print('Line: $line');
+      print('Image: $photo');
+    } else {
+      // Insert New Vehicle Data
+      print('Insert Data');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    insertData();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    listNewVehicle = [];
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    list = [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        // Prevent the default back button behavior
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            (widget.mode == 1) ? 'Tambah Kendaraan' : 'Edit Kendaraan',
+            style: GlobalFont.giantfontM,
+          ),
+          // backgroundColor: const Color(0xFFF59842),
+          // backgroundColor: Colors.red,
+          backgroundColor: const Color(0xFFFE0000),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            //replace with our own icon data.
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  LabelTitleStatic(
+                    'DATA KENDARAAN',
+                    GlobalFont.middlegigafontC,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0225,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      uploadImage();
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200]!,
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(color: Colors.black),
+                      ),
+                      child: CustomImage(
+                        image:
+                            (GlobalVar.listVehicle[widget.index].photo != '' &&
+                                    widget.mode == 2)
+                                ? Image.memory(
+                                    base64Decode(
+                                      GlobalVar.listVehicle[widget.index].photo,
+                                    ),
+                                    width: 150,
+                                    height: 150,
+                                  )
+                                : displayImage,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        borderRadius: 10.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0225,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setPlateNo,
+                    plateNo,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'plat nomor *',
+                    isCapital: true,
+                    icon: Icons.credit_card_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setUnitID,
+                    unitID,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'tipe kendaraan *',
+                    isCapital: true,
+                    icon: Icons.directions_car_filled_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setChasisNo,
+                    chasisNo,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'nomor chasis',
+                    isCapital: true,
+                    icon: Icons.numbers_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setEngineNo,
+                    engineNo,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'nomor mesin',
+                    isCapital: true,
+                    icon: Icons.abc_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setColor,
+                    color,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'warna',
+                    isCapital: true,
+                    icon: Icons.color_lens_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomUserInput(
+                    setYear,
+                    year,
+                    isDataAvailable: true,
+                    mode: 0,
+                    hint: 'tahun kendaraan',
+                    isCapital: true,
+                    icon: Icons.date_range_rounded,
+                    isIcon: true,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0225,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Tombol(
+                    (widget.mode == 1) ? 'TAMBAH' : 'SIMPAN',
+                    submitData,
+                    lebar: MediaQuery.of(context).size.width * 0.8,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.0125,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

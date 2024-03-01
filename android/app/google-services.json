@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "827155009823",
+    "project_id": "fixupmoto-5e9cb",
+    "storage_bucket": "fixupmoto-5e9cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827155009823:android:a36399314b2c5439c5a02a",
+        "android_client_info": {
+          "package_name": "com.stsj.fixupmotoapps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDrNV4ICwDtoblSzH0v6OomElB8TKiX5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
