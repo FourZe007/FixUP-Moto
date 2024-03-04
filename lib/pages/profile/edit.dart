@@ -93,6 +93,9 @@ class _EditProfileState extends State<EditProfile> {
           'MEMBERSHIP',
           GlobalUser.id!,
           '',
+          '',
+          '',
+          '',
         );
         // jaga-jaga biar data yang barusan diupdate sudah bener-bener terupdate
         // di dalam aplikasi

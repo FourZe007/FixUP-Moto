@@ -48,6 +48,7 @@ class _VoucherHistoryState extends State<VoucherHistory>
 
   // late final PictureInfo pictureInfo;
 
+  // ga dipake
   void getVoucher() async {
     GlobalVar.listGetVoucher = await GlobalAPI.fetchGetVoucher('POINTID');
   }

@@ -53,6 +53,8 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>...to display the your bicycle or other vehicle</string>
+	<string>...to display your motorcycle</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 </dict>
 </plist>

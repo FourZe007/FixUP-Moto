@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/global/model.dart';
+import 'package:fixupmoto/main.dart';
 import 'package:http/http.dart' as http;
 
 class GlobalAPI {
@@ -125,6 +126,9 @@ class GlobalAPI {
   static Future<List<ModelBrowseUser>> getUserData(
     String type,
     String memberID,
+    String memberName,
+    String plateNo,
+    String phoneNo,
     String status,
   ) async {
     var url = Uri.https('wsip.yamaha-jatim.co.id:2448', '/apiSAMP/BrowseTrans');
@@ -132,6 +136,9 @@ class GlobalAPI {
     Map mapUserData = {
       "Jenis": type,
       "MemberID": memberID,
+      "MemberName": memberName,
+      "PlateNo": plateNo,
+      "PhoneNo": phone,
       "Status": status,
     };
 

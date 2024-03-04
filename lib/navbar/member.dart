@@ -372,10 +372,34 @@ class _MemberState extends State<Member> {
                           ),
                         ],
                       ),
-                      for (int i = 0; i < GlobalVar.listGetVoucher.length; i++)
-                        PopUpVisibility(
-                          GlobalVar.listGetVoucher[i],
-                        ),
+                      GlobalVar.listGetVoucher.isNotEmpty
+                          ? Column(
+                              children: [
+                                for (int i = 0;
+                                    i < GlobalVar.listGetVoucher.length;
+                                    i++)
+                                  PopUpVisibility(
+                                    GlobalVar.listGetVoucher[i],
+                                  )
+                              ],
+                            )
+                          : SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Voucher Unavailable',
+                                    style: GlobalFont.bigfontMNormal,
+                                  ),
+                                  Text(
+                                    'Hubungi Admin FixUP Moto untuk info lebih lanjut',
+                                    style: GlobalFont.middlebigfontM,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),
