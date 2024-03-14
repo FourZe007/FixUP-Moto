@@ -10,6 +10,7 @@ import 'package:fixupmoto/pages/profile/sparepart_invoice.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
+import 'package:upgrader/upgrader.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -86,6 +87,7 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
 
+    // GlobalFunction.getAppVersion();
     getMemberInvoice();
   }
 
@@ -115,444 +117,454 @@ class _ProfileState extends State<Profile> {
             contentType: ContentType.warning,
           ),
         ),
-        child: Scaffold(
-          appBar: AppBar(
-            // backgroundColor: const Color(0xFFF59842),
-            // backgroundColor: Colors.red,
-            backgroundColor: const Color(0xFFFE0000),
-            elevation: 0.0,
-            // toolbarHeight: 0.0,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20.0),
-                bottomRight: Radius.circular(20.0),
+        child: UpgradeAlert(
+          dialogStyle: UpgradeDialogStyle.cupertino,
+          child: Scaffold(
+            appBar: AppBar(
+              // backgroundColor: const Color(0xFFF59842),
+              // backgroundColor: Colors.red,
+              backgroundColor: const Color(0xFFFE0000),
+              elevation: 0.0,
+              // toolbarHeight: 0.0,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(20.0),
+                  bottomRight: Radius.circular(20.0),
+                ),
               ),
-            ),
-            toolbarHeight: MediaQuery.of(context).size.height * 0.225,
-            title: Container(
-              padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width * 0.025,
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.225,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.0225,
-                      ),
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.025,
-                              ),
-                              child: Text(
-                                'Welcome,',
-                                style: GlobalFont.middlegigafontM,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width * 0.025,
-                              ),
-                              child: Text(
-                                GlobalVar.listUserData.isNotEmpty
-                                    ? GlobalVar.listUserData[0].memberName
-                                    : '',
-                                style: GlobalFont.gigafontM,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width * 0.025,
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      right: MediaQuery.of(context).size.width *
-                                          0.01,
-                                    ),
-                                    child: Text(
-                                      GlobalVar.listUserData.isNotEmpty
-                                          ? GlobalVar.listUserData[0].memberID
-                                          : '',
-                                      style: GlobalFont.middlegiantfontM,
-                                    ),
-                                  ),
-                                  GlobalVar.listUserData.isNotEmpty
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            FlutterClipboard.copy(GlobalVar
-                                                .listUserData[0].memberID);
-                                          },
-                                          child: const Icon(
-                                            Icons.copy,
-                                            size: 20.0,
-                                            weight: 0.5,
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: navigateToEditPage,
-                                icon: const Icon(Icons.edit),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ProfileSettings(),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.settings),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            leading: null,
-            automaticallyImplyLeading: false,
-          ),
-          body: Column(
-            children: [
-              SingleChildScrollView(
-                child: Column(
+              toolbarHeight: MediaQuery.of(context).size.height * 0.225,
+              title: Container(
+                padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width * 0.025,
+                ),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.225,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.025,
-                            bottom: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.height * 0.02,
-                            0.0,
-                            MediaQuery.of(context).size.height * 0.005,
-                            0.0,
-                          ),
-                          child: Text(
-                            'Profile',
-                            style: GlobalFont.bigfontR,
-                          ),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.0225,
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.01,
-                            bottom: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.height * 0.02,
-                            0.0,
-                            MediaQuery.of(context).size.height * 0.005,
-                            0.0,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.mail_rounded, size: 30.0),
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.height * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  top: MediaQuery.of(context).size.height *
+                                      0.025,
+                                ),
+                                child: Text(
+                                  'Welcome,',
+                                  style: GlobalFont.middlegigafontM,
+                                ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Email',
-                                    style: GlobalFont.bigfontR,
-                                  ),
-                                  Text(
-                                    GlobalVar.listUserData[0].email != ''
-                                        ? GlobalVar.listUserData[0].email
-                                        : '-',
-                                    style: GlobalFont.giantfontR,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.01,
-                            bottom: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.height * 0.02,
-                            0.0,
-                            MediaQuery.of(context).size.height * 0.005,
-                            0.0,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.phone, size: 30.0),
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.height * 0.04,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Nomor Telepon',
-                                    style: GlobalFont.bigfontR,
-                                  ),
-                                  Text(
-                                    GlobalVar.listUserData.isNotEmpty
-                                        ? '0${GlobalVar.listUserData[0].phoneNumber}'
-                                        : '',
-                                    style: GlobalFont.giantfontR,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.01,
-                            bottom: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.height * 0.02,
-                            0.0,
-                            MediaQuery.of(context).size.height * 0.005,
-                            0.0,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.pedal_bike_rounded,
-                                size: 30.0,
-                              ),
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.height * 0.04,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Total Kendaraan',
-                                    style: GlobalFont.bigfontR,
-                                  ),
-                                  Text(
-                                    GlobalVar.listUserData.isNotEmpty
-                                        ? GlobalVar.listUserData[0].qty
-                                            .toString()
-                                        : '',
-                                    style: GlobalFont.giantfontR,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: MediaQuery.of(context).size.height * 0.025,
-                            bottom: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.height * 0.02,
-                            0.0,
-                            MediaQuery.of(context).size.height * 0.005,
-                            0.0,
-                          ),
-                          child: Text(
-                            'Invoice',
-                            style: GlobalFont.bigfontR,
-                          ),
-                        ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ServiceInvoice(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                              vertical:
-                                  MediaQuery.of(context).size.height * 0.01,
                             ),
-                            padding: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.height * 0.025,
-                              0.0,
-                              MediaQuery.of(context).size.height * 0.005,
-                              0.0,
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  top:
+                                      MediaQuery.of(context).size.width * 0.025,
+                                ),
+                                child: Text(
+                                  GlobalVar.listUserData.isNotEmpty
+                                      ? GlobalVar.listUserData[0].memberName
+                                      : '',
+                                  style: GlobalFont.gigafontM,
+                                ),
+                              ),
                             ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                  top:
+                                      MediaQuery.of(context).size.width * 0.025,
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        right:
+                                            MediaQuery.of(context).size.width *
+                                                0.01,
+                                      ),
+                                      child: Text(
+                                        GlobalVar.listUserData.isNotEmpty
+                                            ? GlobalVar.listUserData[0].memberID
+                                            : '',
+                                        style: GlobalFont.middlegiantfontM,
+                                      ),
+                                    ),
+                                    GlobalVar.listUserData.isNotEmpty
+                                        ? GestureDetector(
+                                            onTap: () {
+                                              FlutterClipboard.copy(GlobalVar
+                                                  .listUserData[0].memberID);
+                                            },
+                                            child: const Icon(
+                                              Icons.copy,
+                                              size: 20.0,
+                                              weight: 0.5,
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Icon(
-                                  Icons.handyman_rounded,
-                                  size: 30.0,
+                                IconButton(
+                                  onPressed: navigateToEditPage,
+                                  icon: const Icon(Icons.edit),
                                 ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.65,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Service',
-                                        style: GlobalFont.giantfontR,
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ProfileSettings(),
                                       ),
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.001,
-                                      ),
-                                      Text(
-                                        'Tap to view',
-                                        style: GlobalFont.mediumbigfontR,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  // color: Color(0xFFF59842),
-                                  // color: Colors.red[700],
-                                  // color: Colors.blue,
-                                  color: Color(0xFFFE0000),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.settings),
                                 ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SparepartInvoice(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
-                              vertical:
-                                  MediaQuery.of(context).size.height * 0.01,
-                            ),
-                            padding: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.height * 0.025,
-                              0.0,
-                              MediaQuery.of(context).size.height * 0.005,
-                              0.0,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.precision_manufacturing_rounded,
-                                  size: 30.0,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.65,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Spare Parts',
-                                        style: GlobalFont.giantfontR,
-                                      ),
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.001,
-                                      ),
-                                      Text(
-                                        'Tap to view',
-                                        style: GlobalFont.mediumbigfontR,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.06,
-                                ),
-                                const Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  // color: Color(0xFFF59842),
-                                  // color: Colors.red[700],
-                                  // color: Colors.blue,
-                                  color: Color(0xFFFE0000),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
+              leading: null,
+              automaticallyImplyLeading: false,
+            ),
+            body: Column(
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.025,
+                              bottom: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.height * 0.02,
+                              0.0,
+                              MediaQuery.of(context).size.height * 0.005,
+                              0.0,
+                            ),
+                            child: Text(
+                              'Profile',
+                              style: GlobalFont.bigfontR,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              bottom: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.height * 0.02,
+                              0.0,
+                              MediaQuery.of(context).size.height * 0.005,
+                              0.0,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.mail_rounded, size: 30.0),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Email',
+                                      style: GlobalFont.bigfontR,
+                                    ),
+                                    Text(
+                                      GlobalVar.listUserData[0].email != ''
+                                          ? GlobalVar.listUserData[0].email
+                                          : '-',
+                                      style: GlobalFont.giantfontR,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              bottom: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.height * 0.02,
+                              0.0,
+                              MediaQuery.of(context).size.height * 0.005,
+                              0.0,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.phone, size: 30.0),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Nomor Telepon',
+                                      style: GlobalFont.bigfontR,
+                                    ),
+                                    Text(
+                                      GlobalVar.listUserData.isNotEmpty
+                                          ? '0${GlobalVar.listUserData[0].phoneNumber}'
+                                          : '',
+                                      style: GlobalFont.giantfontR,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.01,
+                              bottom: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.height * 0.02,
+                              0.0,
+                              MediaQuery.of(context).size.height * 0.005,
+                              0.0,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.pedal_bike_rounded,
+                                  size: 30.0,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Total Kendaraan',
+                                      style: GlobalFont.bigfontR,
+                                    ),
+                                    Text(
+                                      GlobalVar.listUserData.isNotEmpty
+                                          ? GlobalVar.listUserData[0].qty
+                                              .toString()
+                                          : '',
+                                      style: GlobalFont.giantfontR,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: MediaQuery.of(context).size.height * 0.025,
+                              bottom: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              MediaQuery.of(context).size.height * 0.02,
+                              0.0,
+                              MediaQuery.of(context).size.height * 0.005,
+                              0.0,
+                            ),
+                            child: Text(
+                              'Invoice',
+                              style: GlobalFont.bigfontR,
+                            ),
+                          ),
+                          GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ServiceInvoice(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.01,
+                              ),
+                              padding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.height * 0.025,
+                                0.0,
+                                MediaQuery.of(context).size.height * 0.005,
+                                0.0,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.handyman_rounded,
+                                    size: 30.0,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Service',
+                                          style: GlobalFont.giantfontR,
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.001,
+                                        ),
+                                        Text(
+                                          'Tap to view',
+                                          style: GlobalFont.mediumbigfontR,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    // color: Color(0xFFF59842),
+                                    // color: Colors.red[700],
+                                    // color: Colors.blue,
+                                    color: Color(0xFFFE0000),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            behavior: HitTestBehavior.translucent,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SparepartInvoice(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.symmetric(
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.01,
+                              ),
+                              padding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.height * 0.025,
+                                0.0,
+                                MediaQuery.of(context).size.height * 0.005,
+                                0.0,
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.precision_manufacturing_rounded,
+                                    size: 30.0,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Spare Parts',
+                                          style: GlobalFont.giantfontR,
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.001,
+                                        ),
+                                        Text(
+                                          'Tap to view',
+                                          style: GlobalFont.mediumbigfontR,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    // color: Color(0xFFF59842),
+                                    // color: Colors.red[700],
+                                    // color: Colors.blue,
+                                    color: Color(0xFFFE0000),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

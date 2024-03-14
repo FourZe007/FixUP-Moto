@@ -13,7 +13,10 @@ class LabelStatic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width * 0.01,
+        vertical: MediaQuery.of(context).size.height * 0.01,
+      ),
       child: Text(
         judul,
         style: modelfont,

@@ -13,7 +13,6 @@ import 'package:fixupmoto/navbar/member.dart';
 import 'package:fixupmoto/navbar/messages.dart';
 import 'package:fixupmoto/navbar/profile.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:provider/provider.dart';
@@ -90,28 +89,38 @@ class _BottomNavBarState extends State<BottomNavBar>
     }
   }
 
-  void getNotification() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // Future<void> getNotification() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //
+  //   GlobalUser.id = prefs.getString('id');
+  //
+  //   notifDetailTemp = [];
+  //   setState(() => GlobalVar.isLoading = true);
+  //   notifDetailTemp = await GlobalAPI.fetchGetNotification('1', '0');
+  //   // NotificationChangeNotifier().notify(notifDetailTemp);
+  //   GlobalVar.notificationDetailLength = 0;
+  //   GlobalVar.notificationDetailLength = notifDetailTemp.length;
+  //   print('Notification Detail Length: ${GlobalVar.notificationDetailLength}');
+  //
+  //   // setState(() {});
+  //   setState(() => GlobalVar.isLoading = false);
+  //
+  //   // print('Counting');
+  //   // for (int i = 0; i < GlobalVar.listNotificationDetail.length; i++) {
+  //   //   print('${i + 1} - ${GlobalVar.listNotificationDetail[i].notifID}');
+  //   // }
+  //   // print('Bottom Navbar Notif Length: ${GlobalVar.notificationDetailLength}');
+  //   // sendNotification();
+  // }
 
+  Stream<int> getNotification() async* {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     GlobalUser.id = prefs.getString('id');
 
     notifDetailTemp = [];
-    setState(() => GlobalVar.isLoading = true);
     notifDetailTemp = await GlobalAPI.fetchGetNotification('1', '0');
-    // NotificationChangeNotifier().notify(notifDetailTemp);
-    GlobalVar.notificationDetailLength = 0;
-    GlobalVar.notificationDetailLength = notifDetailTemp.length;
-    print('Notification Detail Length: ${GlobalVar.notificationDetailLength}');
-
-    // setState(() {});
-    setState(() => GlobalVar.isLoading = false);
-
-    // print('Counting');
-    // for (int i = 0; i < GlobalVar.listNotificationDetail.length; i++) {
-    //   print('${i + 1} - ${GlobalVar.listNotificationDetail[i].notifID}');
-    // }
-    // print('Bottom Navbar Notif Length: ${GlobalVar.notificationDetailLength}');
-    // sendNotification();
+    print('StreamBuilder getNotification length: ${notifDetailTemp.length}');
+    yield notifDetailTemp.length;
   }
 
   // void getUpdatedNotification() async {
@@ -121,7 +130,7 @@ class _BottomNavBarState extends State<BottomNavBar>
   //   // NotificationChangeNotifier().notify(list);
   //   // return GlobalVar.listNotificationDetail.length;
   // }
-
+  //
   // void getNotification() async {
   //   GlobalVar.listNotificationDetail = [];
   //   // setState(() => GlobalVar.isLoading = true);
@@ -238,75 +247,134 @@ class _BottomNavBarState extends State<BottomNavBar>
         backgroundColor: const Color(0xFFFE0000),
         itemCount: iconList.length,
         tabBuilder: (int index, bool isActive) {
-          return Icon(
-            iconList[index],
-            size: 24,
-            // color: isActive ? const Color(0xFFF59842) : Colors.black,
-            // color: isActive ? Colors.blue[800] : Colors.black,
-            color: isActive ? Colors.white : Colors.black,
-          );
+          // return Icon(
+          //   iconList[index],
+          //   size: 24,
+          //   // color: isActive ? const Color(0xFFF59842) : Colors.black,
+          //   // color: isActive ? Colors.blue[800] : Colors.black,
+          //   color: isActive ? Colors.white : Colors.black,
+          // );
           // getUpdatedNotification();
-          // if (iconList[index] == Icons.message) {
-          //   // Icons with number at the top right
-          //   return AnimatedContainer(
-          //     duration: const Duration(seconds: 1),
-          //     alignment: Alignment.center,
-          //     child: Stack(
-          //       children: <Widget>[
-          //         Positioned(
-          //           left: MediaQuery.of(context).size.width * 0.074,
-          //           top: MediaQuery.of(context).size.height * 0.01885,
-          //           child: Icon(
-          //             iconList[index],
-          //             size: 24,
-          //             color: isActive ? Colors.white : Colors.black,
-          //           ),
-          //         ),
-          //         Positioned(
-          //           left: MediaQuery.of(context).size.width * 0.0325,
-          //           // left: MediaQuery.of(context).size.width * 0.115,
-          //           top: MediaQuery.of(context).size.height * 0.009,
-          //           child: Center(
-          //             child: Container(
-          //               height: MediaQuery.of(context).size.height * 0.025,
-          //               // width: MediaQuery.of(context).size.width * 0.05,
-          //               padding: EdgeInsets.symmetric(
-          //                 horizontal: MediaQuery.of(context).size.width * 0.015,
-          //                 vertical: MediaQuery.of(context).size.height * 0.0025,
-          //               ),
-          //               decoration: BoxDecoration(
-          //                 color: Colors.yellow,
-          //                 // border: Border.all(color: Colors.yellow),
-          //                 borderRadius: BorderRadius.circular(20.0),
-          //               ),
-          //               child: Row(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: [
-          //                   Text(
-          //                     (GlobalVar.notifProviderLength.list.isNotEmpty)
-          //                         ? GlobalVar.notifProviderLength.list.length
-          //                             .toString()
-          //                         : GlobalVar.notificationDetailLength
-          //                             .toString(),
-          //                     style: GlobalFont.mediumbigfontRNormal,
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   );
-          // } else {
-          //   return Icon(
-          //     iconList[index],
-          //     size: 24,
-          //     // color: isActive ? const Color(0xFFF59842) : Colors.black,
-          //     // color: isActive ? Colors.blue[800] : Colors.black,
-          //     color: isActive ? Colors.white : Colors.black,
-          //   );
-          // }
+          if (iconList[index] == Icons.message) {
+            // Icons with number at the top right
+            // return FutureBuilder(
+            //   future: getNotification(),
+            //   builder: (context, snapshot) {
+            //     return AnimatedContainer(
+            //       duration: const Duration(seconds: 1),
+            //       alignment: Alignment.center,
+            //       child: Stack(
+            //         children: <Widget>[
+            //           Positioned(
+            //             left: MediaQuery.of(context).size.width * 0.074,
+            //             top: MediaQuery.of(context).size.height * 0.01885,
+            //             child: Icon(
+            //               iconList[index],
+            //               size: 24,
+            //               color: isActive ? Colors.white : Colors.black,
+            //             ),
+            //           ),
+            //           Positioned(
+            //             left: MediaQuery.of(context).size.width * 0.0325,
+            //             // left: MediaQuery.of(context).size.width * 0.115,
+            //             top: MediaQuery.of(context).size.height * 0.009,
+            //             child: Center(
+            //               child: Container(
+            //                 height: MediaQuery.of(context).size.height * 0.025,
+            //                 // width: MediaQuery.of(context).size.width * 0.05,
+            //                 padding: EdgeInsets.symmetric(
+            //                   horizontal:
+            //                       MediaQuery.of(context).size.width * 0.015,
+            //                   vertical:
+            //                       MediaQuery.of(context).size.height * 0.0025,
+            //                 ),
+            //                 decoration: BoxDecoration(
+            //                   color: Colors.yellow,
+            //                   // border: Border.all(color: Colors.yellow),
+            //                   borderRadius: BorderRadius.circular(20.0),
+            //                 ),
+            //                 child: Row(
+            //                   mainAxisAlignment: MainAxisAlignment.center,
+            //                   children: [
+            //                     Text(
+            //                       GlobalVar.notificationDetailLength.toString(),
+            //                       style: GlobalFont.mediumbigfontRNormal,
+            //                     ),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // );
+            return AnimatedContainer(
+              duration: const Duration(seconds: 1),
+              alignment: Alignment.center,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.074,
+                    top: MediaQuery.of(context).size.height * 0.01885,
+                    child: Icon(
+                      iconList[index],
+                      size: 24,
+                      color: isActive ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  Positioned(
+                    left: MediaQuery.of(context).size.width * 0.0425,
+                    // left: MediaQuery.of(context).size.width * 0.115,
+                    top: MediaQuery.of(context).size.height * 0.009,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.0225,
+                      // width: MediaQuery.of(context).size.width * 0.05,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.015,
+                        vertical: MediaQuery.of(context).size.height * 0.0025,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        // border: Border.all(color: Colors.yellow),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          StreamBuilder(
+                            stream: getNotification(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: GlobalFont.mediumbigfontRNormal,
+                                );
+                              }
+                              return SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.015,
+                                child: const Text(''),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Icon(
+              iconList[index],
+              size: 24,
+              // color: isActive ? const Color(0xFFF59842) : Colors.black,
+              // color: isActive ? Colors.blue[800] : Colors.black,
+              color: isActive ? Colors.white : Colors.black,
+            );
+          }
         },
         activeIndex: currentPageIndex,
         gapLocation: GapLocation.center,
@@ -337,85 +405,6 @@ class _BottomNavBarState extends State<BottomNavBar>
           sized: false,
           child: _widgetOptions.elementAt(currentPageIndex),
         ),
-      ),
-    );
-  }
-}
-
-class NavigationScreen extends StatefulWidget {
-  final IconData iconData;
-
-  NavigationScreen(this.iconData) : super();
-
-  @override
-  _NavigationScreenState createState() => _NavigationScreenState();
-}
-
-class _NavigationScreenState extends State<NavigationScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> animation;
-
-  @override
-  void didUpdateWidget(NavigationScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.iconData != widget.iconData) {
-      _startAnimation();
-    }
-  }
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
-    _controller.forward();
-    super.initState();
-  }
-
-  _startAnimation() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    );
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.background,
-      child: ListView(
-        children: [
-          const SizedBox(height: 64),
-          Center(
-            child: CircularRevealAnimation(
-              animation: animation,
-              centerOffset: const Offset(80, 80),
-              maxRadius: MediaQuery.of(context).size.longestSide * 1.1,
-              child: Icon(
-                widget.iconData,
-                color: const Color(0xFFF59842),
-                size: 160,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

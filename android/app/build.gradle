@@ -63,10 +63,14 @@ android {
 
    signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            // keyAlias keystoreProperties['keyAlias']
+            // keyPassword keystoreProperties['keyPassword']
+            // storeFile keystoreProperties['storeFile']
+            // storePassword keystoreProperties['storePassword']
+            storeFile file('C:/Users/Joseph Angelus/upload-keystore.jks')
+            storePassword 'josephangelus'
+            keyAlias = 'upload'
+            keyPassword 'josephangelus'
         }
     }
 

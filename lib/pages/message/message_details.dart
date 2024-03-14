@@ -125,7 +125,8 @@ class _MessageDetailState extends State<MessageDetail> {
                     const SizedBox(height: 10.0),
                     Text(
                       Format.tanggalFormat(
-                          GlobalVar.listNotificationDetail[widget.index].date),
+                        GlobalVar.listNotificationDetail[widget.index].date,
+                      ),
                       style: GlobalFont.middlegiantfontM,
                     ),
                     const SizedBox(height: 30.0),

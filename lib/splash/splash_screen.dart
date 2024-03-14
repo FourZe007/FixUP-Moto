@@ -19,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     GlobalUser.flag = prefs.getInt('flag');
     GlobalUser.isNew = prefs.getBool('isnew');
     if (GlobalUser.flag == null && GlobalUser.isNew == null) {
+      prefs.clear();
       GlobalUser.flag = 0;
       GlobalUser.isNew = true;
     }
@@ -32,6 +33,34 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       await prefs.setBool('isnew', false);
     }
+
+    // temporary source code - My own source code
+    // GlobalFunction.getAppVersion().then((appVer) async {
+    //   print('Splash Screen - App Version: ${GlobalVar.appVersion}');
+
+    //   if (GlobalVar.currentAppVersion == '') {
+    //     GlobalVar.currentAppVersion = appVer;
+    //     print(
+    //         'Splash Screen - Current App Version: ${GlobalVar.currentAppVersion}');
+    //     await prefs.setString('version', appVer);
+    //   } else {
+    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     GlobalVar.appVersion = prefs.getString('version')!;
+    //     if (GlobalVar.appVersion != GlobalVar.currentAppVersion) {}
+    //   }
+    //   // print(
+    //   //     'Splash Screen - Current App Version: ${GlobalVar.currentAppVersion}');
+    // });
+
+    // print('Splash Screen - App Version: ${GlobalVar.appVersion}');
+    // print(
+    //     'Splash Screen - Current App Version: ${GlobalVar.currentAppVersion}');
+    // GlobalFunction.getAppVersion();
+    // if (GlobalVar.currentAppVersion == '') {
+    //   GlobalVar.currentAppVersion = GlobalVar.appVersion;
+    // }
+    // setState(() {});
+    // await prefs.setString('version', GlobalVar.appVersion);
   }
 
   @override

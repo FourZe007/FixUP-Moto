@@ -3,6 +3,7 @@ import 'package:fixupmoto/widget/carousel/notification_length_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class GlobalUser {
   static String? id = '';
@@ -17,6 +18,15 @@ class GlobalUser {
 class GlobalVar {
   static bool isLoading = true;
   static bool isChange = false;
+
+  // About Apps - String only
+  // dynamic variable that will change if there's change
+  static String appName = '';
+  static String packageName = '';
+  static String appVersion = '';
+  static String buildNumber = '';
+  // About Apps - Shared Preference
+  static String currentAppVersion = '';
 
   static List<ModelResultMessage> listRegister = [];
   static List<ModelWorkshopDetail> listWorkshopDetail = [];
@@ -98,6 +108,15 @@ class GlobalFont {
     fontSize: GlobalSize.bigfont,
     fontWeight: FontWeight.bold,
     backgroundColor: Colors.transparent,
+  );
+
+  static TextStyle bigfontCUnderlined = TextStyle(
+    color: Colors.black,
+    fontFamily: GlobalFontFamily.fontCourier,
+    fontSize: GlobalSize.bigfont,
+    fontWeight: FontWeight.bold,
+    backgroundColor: Colors.transparent,
+    decoration: TextDecoration.underline,
   );
 
   static TextStyle bigfontCWhite = TextStyle(
@@ -333,6 +352,37 @@ class GlobalFunction {
       },
     );
   }
+
+  // static Future<String> getAppVersion() async {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+  //   // GlobalVar.appName = packageInfo.appName;
+  //   // GlobalVar.packageName = packageInfo.packageName;
+  //   // GlobalVar.appVersion = packageInfo.version;
+  //   // GlobalVar.buildNumber = packageInfo.buildNumber;
+
+  //   // print('~:App Informations:~');
+  //   // print('App Name: ${GlobalVar.appName}');
+  //   // print('Package Name: ${GlobalVar.packageName}');
+  //   // print('App Version: ${GlobalVar.appVersion}');
+  //   // print('Build Number: ${GlobalVar.buildNumber}');
+
+  //   return packageInfo.version;
+  // }
+
+  // static void changeAppVersion() async {
+  //   GlobalFunction.getAppVersion().then((appVersion) {
+  //     print('changeAppVersion Function - App Version: ${GlobalVar.appVersion}');
+
+  //     if (GlobalVar.currentAppVersion == '') {
+  //       GlobalVar.currentAppVersion = GlobalVar.appVersion;
+  //       print(
+  //           'changeAppVersion Function - Current App Version: ${GlobalVar.appVersion}');
+  //     }
+  //     print(
+  //         'changeAppVersion Function - Current App Version: ${GlobalVar.appVersion}');
+  //   });
+  // }
 
   static void getNotification() async {
     GlobalVar.listNotificationDetail = [];

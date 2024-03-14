@@ -408,17 +408,15 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
                         border: Border.all(color: Colors.black),
                       ),
                       child: CustomImage(
-                        image:
-                            (GlobalVar.listVehicle[widget.index].photo != '' &&
-                                    widget.mode == 2)
-                                ? Image.memory(
-                                    base64Decode(
-                                      GlobalVar.listVehicle[widget.index].photo,
-                                    ),
-                                    width: 150,
-                                    height: 150,
-                                  )
-                                : displayImage,
+                        image: (widget.mode == 2)
+                            ? Image.memory(
+                                base64Decode(
+                                  GlobalVar.listVehicle[widget.index].photo,
+                                ),
+                                width: 150,
+                                height: 150,
+                              )
+                            : displayImage,
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: MediaQuery.of(context).size.height * 0.35,
                         borderRadius: 10.0,

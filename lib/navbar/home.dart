@@ -19,9 +19,9 @@ import 'package:fixupmoto/pages/home/service_history.dart';
 import 'package:fixupmoto/widget/image/customimage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
+import 'package:upgrader/upgrader.dart';
 // Install Chiwie to display and play a video!
 
 // ignore: must_be_immutable
@@ -33,6 +33,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  String url = '';
   List<String> homeImages = [];
 
   int _currentHeader = 0;
@@ -240,6 +242,7 @@ class _HomeState extends State<Home> {
 
   void getVehicle() async {
     GlobalVar.listVehicle = await GlobalAPI.fetchGetVehicle();
+    print('Vehicle List Length: ${GlobalVar.listVehicle.length}');
     // if (GlobalVar.listVehicle.isNotEmpty) {
     //   print('Vehicle are not empty');
     // } else {
@@ -420,8 +423,6 @@ class _HomeState extends State<Home> {
   }
 
   void getDevice() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       GlobalUser.deviceName = androidInfo.model;
@@ -472,36 +473,19 @@ class _HomeState extends State<Home> {
     }
   }
 
-  // void notifyHeader(int index) {
-  //   _currentIndex = index;
-  //   notifyListeners();
-  // }
-
-  // void notifyContent(int index) {
-  //   _currentIndex = index;
-  //   notifyListeners();
-  // }
-
   @override
   void initState() {
     super.initState();
 
     GlobalVar.isLoading = true;
-    // setState(() => GlobalVar.isLoading = true);
-    // print('Home InitState: ${GlobalVar.isLoading}');
 
-    print('Before: ${GlobalVar.listVehicle.length}');
+    // print('Before: ${GlobalVar.listVehicle.length}');
     checkUser(context);
-    print('After: ${GlobalVar.listVehicle.length}');
-    // setState(() => GlobalVar.isLoading = false);
+    // print('After: ${GlobalVar.listVehicle.length}');
   }
 
   @override
   void dispose() {
-    // for (int i = 0; i < videoPlayerControllerList.length; i++) {
-    //   videoPlayerControllerList[i].dispose();
-    // }
-
     for (VideoPlayerController controller in videoPlayerControllerList) {
       controller.dispose();
     }
@@ -511,9 +495,6 @@ class _HomeState extends State<Home> {
 
     GlobalVar.listVehicle = [];
     GlobalVar.listFeeds = [];
-    // for (int i = 0; i < videoControllers.length; i++) {
-    //   videoControllers[i].dispose();
-    // }
   }
 
   @override
@@ -538,184 +519,182 @@ class _HomeState extends State<Home> {
             contentType: ContentType.warning,
           ),
         ),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color(0xFFFE0000),
-            elevation: 0.0,
-            toolbarHeight: 0.0,
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  decoration: const BoxDecoration(
-                    // color: Color(0xFFF59842),
-                    // color: Color(0xFF99CCFF),
-                    color: Color(0xFFFE0000),
-                    // border: Border.all(color: Colors.black),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
+        child: UpgradeAlert(
+          dialogStyle: UpgradeDialogStyle.cupertino,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: const Color(0xFFFE0000),
+              elevation: 0.0,
+              toolbarHeight: 0.0,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    decoration: const BoxDecoration(
+                      // color: Color(0xFFF59842),
+                      // color: Color(0xFF99CCFF),
+                      color: Color(0xFFFE0000),
+                      // border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(30.0),
+                        bottomRight: Radius.circular(30.0),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CarouselSlider(
+                          items: getCarouselHeaderItems(context),
+                          options: CarouselOptions(
+                            height: MediaQuery.of(context).size.height * 0.425,
+                            viewportFraction: 1.0,
+                            autoPlay: false,
+                            // onPageChanged: (index, reason) {
+                            //   setState(() => _currentHeader = index);
+                            // },
+                            onPageChanged: (index, reason) {
+                              if (reason != CarouselPageChangedReason.timed) {
+                                // Don't update non-autoplay if triggered externally
+                                carouselNotifier.notify(index, _currentHeader);
+                                setState(() => _currentHeader = index);
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        DotsIndicator(
+                          dotsCount: getCarouselHeaderItems(context).length,
+                          position: _currentHeader,
+                          decorator: const DotsDecorator(
+                            size: Size(8.0, 8.0),
+                            activeSize: Size(12.0, 12.0),
+                            // activeColor: Color(0xFFFFF305),
+                            // activeColor: Colors.blue,
+                            activeColor: Colors.black,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Column(
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.025,
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CarouselSlider(
-                        items: getCarouselHeaderItems(context),
-                        options: CarouselOptions(
-                          height: MediaQuery.of(context).size.height * 0.425,
-                          viewportFraction: 1.0,
-                          autoPlay: false,
-                          // onPageChanged: (index, reason) {
-                          //   setState(() => _currentHeader = index);
-                          // },
-                          onPageChanged: (index, reason) {
-                            if (reason != CarouselPageChangedReason.timed) {
-                              // Don't update non-autoplay if triggered externally
-                              carouselNotifier.notify(index, _currentHeader);
-                              setState(() => _currentHeader = index);
-                            }
-                          },
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      DotsIndicator(
-                        dotsCount: getCarouselHeaderItems(context).length,
-                        position: _currentHeader,
-                        decorator: const DotsDecorator(
-                          size: Size(8.0, 8.0),
-                          activeSize: Size(12.0, 12.0),
-                          // activeColor: Color(0xFFFFF305),
-                          // activeColor: Colors.blue,
-                          activeColor: Colors.black,
-                          color: Colors.white,
-                        ),
+                      Text(
+                        // 'Special Offer',
+                        'Billboard',
+                        style: GlobalFont.giantfontM,
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.025,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      // 'Special Offer',
-                      'Billboard',
-                      style: GlobalFont.giantfontM,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.025,
-                ),
-                Container(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.05,
-                    right: MediaQuery.of(context).size.width * 0.05,
-                    bottom: MediaQuery.of(context).size.height * 0.025,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.025,
                   ),
-                  child: (controllerList.isNotEmpty)
-                      ? Column(
-                          children: [
-                            CarouselSlider(
-                              items: [
-                                // for (int i = 0; i < chewieControllerList.length; i++)
-                                //   AspectRatio(
-                                //     aspectRatio: 16 / 9,
-                                //     child: Chewie(
-                                //       controller: chewieControllerList[i],
-                                //     ),
-                                //   ),
-                                for (int i = 0; i < controllerList.length; i++)
-                                  (controllerListType[i] == 'video')
-                                      ? AspectRatio(
-                                          aspectRatio: 16 / 9,
-                                          child: Chewie(
-                                            controller: controllerList[i],
-                                          ),
-                                        )
-                                      : Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.6,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.5,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                            image: DecorationImage(
-                                              image: CachedNetworkImageProvider(
-                                                controllerList[i],
+                  Container(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.05,
+                      right: MediaQuery.of(context).size.width * 0.05,
+                      bottom: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                    child: (controllerList.isNotEmpty)
+                        ? Column(
+                            children: [
+                              CarouselSlider(
+                                items: [
+                                  for (int i = 0;
+                                      i < controllerList.length;
+                                      i++)
+                                    (controllerListType[i] == 'video')
+                                        ? AspectRatio(
+                                            aspectRatio: 16 / 9,
+                                            child: Chewie(
+                                              controller: controllerList[i],
+                                            ),
+                                          )
+                                        : Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.6,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.5,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                              image: DecorationImage(
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                  controllerList[i],
+                                                ),
+                                                fit: BoxFit.fill,
                                               ),
-                                              fit: BoxFit.fill,
                                             ),
                                           ),
-                                        ),
-                              ],
-                              options: CarouselOptions(
-                                // height: MediaQuery.of(context).size.height * 0.5,
-                                viewportFraction: 1.0,
-                                autoPlay: true,
-                                onPageChanged: (index, reason) {
-                                  setState(() => _currentContent = index);
-                                },
-                                // onPageChanged: (index, reason) {
-                                //   carouselNotifier.notify(
-                                //       index, _currentContent);
-                                //   if (reason !=
-                                //       CarouselPageChangedReason.timed) {
-                                //     // Don't update non-autoplay if triggered externally
-                                //     carouselNotifier.notify(
-                                //         index, _currentContent);
-                                //     setState(() => _currentContent = index);
-                                //   }
-                                // },
+                                ],
+                                options: CarouselOptions(
+                                  viewportFraction: 1.0,
+                                  autoPlay: true,
+                                  onPageChanged: (index, reason) {
+                                    setState(() => _currentContent = index);
+                                  },
+                                  // onPageChanged: (index, reason) {
+                                  //   carouselNotifier.notify(
+                                  //       index, _currentContent);
+                                  //   if (reason !=
+                                  //       CarouselPageChangedReason.timed) {
+                                  //     // Don't update non-autoplay if triggered externally
+                                  //     carouselNotifier.notify(
+                                  //         index, _currentContent);
+                                  //     setState(() => _currentContent = index);
+                                  //   }
+                                  // },
+                                ),
                               ),
-                            ),
-                            DotsIndicator(
-                              dotsCount: controllerList.length,
-                              position: _currentContent,
-                              decorator: const DotsDecorator(
-                                size: Size(8.0, 8.0),
-                                activeSize: Size(12.0, 12.0),
-                                activeColor: Colors.red,
-                                // activeColor: Colors.blue,
-                                color: Colors.black,
+                              DotsIndicator(
+                                dotsCount: controllerList.length,
+                                position: _currentContent,
+                                decorator: const DotsDecorator(
+                                  size: Size(8.0, 8.0),
+                                  activeSize: Size(12.0, 12.0),
+                                  activeColor: Colors.red,
+                                  // activeColor: Colors.blue,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                          ],
-                        )
-                      : SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.visibility_off_rounded,
-                                size: 40.0,
-                              ),
-                              Text(
-                                'Unavailable',
-                                style: GlobalFont.bigfontM,
-                              ),
+                              const SizedBox(height: 10),
                             ],
+                          )
+                        : SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.visibility_off_rounded,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  'Unavailable',
+                                  style: GlobalFont.bigfontM,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

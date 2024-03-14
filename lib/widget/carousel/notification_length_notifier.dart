@@ -10,6 +10,7 @@ class NotificationLengthChangeNotifier extends ChangeNotifier {
   void notify() {
     print('Get Provider Data!');
     getList();
+    print('NotificationLengthChangeNotifier List Length: ${list.length}');
     // GlobalVar.notificationDetailLength = list.length;
     notifyListeners();
   }
