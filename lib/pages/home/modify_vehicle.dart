@@ -35,7 +35,6 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
   String engineNo = '';
   String color = '';
   String year = '';
-  String photo = '';
   int line = 0;
 
   XFile? pickedFile;
@@ -75,10 +74,6 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
 
   void setYear(String value) {
     year = value;
-  }
-
-  void setPhoto(String value) {
-    photo = value;
   }
 
   void setLine(int value) {
@@ -172,7 +167,7 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
       if (widget.mode == 1) {
         print('New Image: $base64Image');
       } else if (widget.mode == 2) {
-        print('Edit Image: $photo');
+        print('Edit Image: $base64Image');
       }
       print('Line: $line');
 
@@ -275,10 +270,10 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
       engineNo = GlobalVar.listVehicle[widget.index].engineNumber;
       color = GlobalVar.listVehicle[widget.index].color;
       year = GlobalVar.listVehicle[widget.index].year;
-      photo = GlobalVar.listVehicle[widget.index].photo;
+      base64Image = GlobalVar.listVehicle[widget.index].photo;
       line = GlobalVar.listVehicle[widget.index].line;
       print('Line: $line');
-      print('Image: $photo');
+      print('Image: $base64Image');
     } else {
       // Insert New Vehicle Data
       print('Insert Data');
@@ -501,16 +496,21 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Tombol(
-                    (widget.mode == 1) ? 'TAMBAH' : 'SIMPAN',
-                    submitData,
-                    lebar: MediaQuery.of(context).size.width * 0.8,
+                  Container(
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height * 0.025,
+                    ),
+                    child: Tombol(
+                      (widget.mode == 1) ? 'TAMBAH' : 'SIMPAN',
+                      submitData,
+                      lebar: MediaQuery.of(context).size.width * 0.8,
+                    ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.0125,
+              // ),
             ],
           ),
         ),
