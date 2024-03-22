@@ -68,15 +68,15 @@ class _HomeState extends State<Home> {
                 : CustomImage(
                     image: Image.memory(
                       base64Decode(GlobalVar.listVehicle[i].photo),
-                      width: 150,
-                      height: 150,
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      height: MediaQuery.of(context).size.height * 0.2,
                     ),
                     width: MediaQuery.of(context).size.width * 0.7,
                     // height: MediaQuery.of(context).size.height * 0.3,
                   ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
-            ),
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.01,
+            // ),
             (GlobalVar.isChange == true)
                 ? const Center(child: CircleLoading())
                 : Row(

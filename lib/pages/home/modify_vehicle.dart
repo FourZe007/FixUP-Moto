@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/widget/carousel/vehicle_notifier.dart';
@@ -114,7 +116,6 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
         ),
       );
 
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
@@ -122,9 +123,7 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
       isLarger = false;
       images.Image resized = images.copyResize(
         img,
-        // ignore: use_build_context_synchronously
         width: img.width.toInt(),
-        // ignore: use_build_context_synchronously
         height: img.height.toInt(),
       );
 
@@ -177,91 +176,52 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
       }
       print('Line: $line');
 
-      int colorLength = color.length;
-      int yearLength = year.length;
-      if (colorLength <= 15 && yearLength <= 4) {
-        print('Old Updated Data: ${GlobalVar.listVehicle[widget.index].color}');
-        listNewVehicle = await GlobalAPI.fetchModifyVehicle(
-          widget.mode.toString(),
-          'REGISTERMOTOR',
-          GlobalVar.listUserData[0].memberID,
-          plateNo,
-          unitID,
-          chasisNo != '' ? chasisNo : '-',
-          engineNo != '' ? engineNo : '-',
-          color != '' ? color : '-',
-          year != '' ? year : '-',
-          widget.mode == 1 ? base64Image : photo,
-          widget.mode == 1 ? 0 : line,
+      listNewVehicle = await GlobalAPI.fetchModifyVehicle(
+        widget.mode.toString(),
+        'REGISTERMOTOR',
+        GlobalVar.listUserData[0].memberID,
+        plateNo,
+        unitID,
+        chasisNo != '' ? chasisNo : '-',
+        engineNo != '' ? engineNo : '-',
+        color != '' ? color : '-',
+        year != '' ? year : '-',
+        base64Image,
+        widget.mode == 1 ? 0 : line,
+      );
+
+      if (listNewVehicle[0].resultMessage == plateNo) {
+        setState(() => GlobalVar.isChange = true);
+        // print('Before isChange: ${GlobalVar.isChange}');
+        list = await GlobalAPI.fetchGetVehicle();
+        VehicleChangeNotifier().notify(list);
+        setState(() => GlobalVar.isChange = false);
+        // print('After isChange: ${GlobalVar.isChange}');
+        // print(
+        //     'Newly Updated Data: ${GlobalVar.listVehicle[widget.index].color}');
+
+        Navigator.pop(context);
+
+        final snackBar = SnackBar(
+          /// need to set following properties for best effect of awesome_snackbar_content
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'SUCCESS!',
+            message: widget.mode == 1
+                ? 'Data Berhasil di Tambah'
+                : 'Data Berhasil di Update',
+
+            /// change contentType to ContentType.success,
+            /// ContentType.warning or ContentType.help for variants
+            contentType: ContentType.success,
+          ),
         );
 
-        if (listNewVehicle[0].resultMessage == plateNo) {
-          // setState(() => widget.isChange = true);
-          // widget.handle();
-          // setState(() => GlobalVar.listVehicle);
-
-          setState(() => GlobalVar.isChange = true);
-          print('Before isChange: ${GlobalVar.isChange}');
-          list = await GlobalAPI.fetchGetVehicle();
-          VehicleChangeNotifier().notify(list);
-          setState(() => GlobalVar.isChange = false);
-          print('After isChange: ${GlobalVar.isChange}');
-          print(
-              'Newly Updated Data: ${GlobalVar.listVehicle[widget.index].color}');
-          // setState(() => widget.isChange = false);
-          // await GlobalAPI.fetchSetVehicle();
-
-          // setState(() => GlobalVar.isLoading = true);
-          // GlobalVar.listVehicle = [];
-          // GlobalVar.listVehicle = await GlobalAPI.fetchGetVehicle();
-          // setState(() {
-          //   GlobalVar.listVehicle;
-          // });
-          // setState(() => GlobalVar.isLoading = false);
-          // print('New Color: ${GlobalVar.listVehicle[i].color}');
-
-          // ignore: use_build_context_synchronously
-          Navigator.pop(context);
-
-          final snackBar = SnackBar(
-            /// need to set following properties for best effect of awesome_snackbar_content
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: 'SUCCESS!',
-              message: 'Data Berhasil di Update',
-
-              /// change contentType to ContentType.success,
-              /// ContentType.warning or ContentType.help for variants
-              contentType: ContentType.success,
-            ),
-          );
-
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-        } else {
-          final snackBar = SnackBar(
-            /// need to set following properties for best effect of awesome_snackbar_content
-            elevation: 0,
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            content: AwesomeSnackbarContent(
-              title: 'FAILED!',
-              message: listNewVehicle[0].resultMessage,
-
-              /// change contentType to ContentType.success,
-              /// ContentType.warning or ContentType.help for variants
-              contentType: ContentType.failure,
-            ),
-          );
-
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
-        }
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       } else {
         final snackBar = SnackBar(
           /// need to set following properties for best effect of awesome_snackbar_content
@@ -269,12 +229,12 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           content: AwesomeSnackbarContent(
-            title: 'WARNING!',
-            message: 'Panjang warna harus kurang dari sama dengan 15 huruf',
+            title: 'FAILED!',
+            message: listNewVehicle[0].resultMessage,
 
             /// change contentType to ContentType.success,
             /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.warning,
+            contentType: ContentType.failure,
           ),
         );
 
@@ -408,13 +368,15 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
                         border: Border.all(color: Colors.black),
                       ),
                       child: CustomImage(
-                        image: (widget.mode == 2)
+                        image: (widget.mode == 2 &&
+                                GlobalVar.listVehicle[widget.index].photo != '')
                             ? Image.memory(
                                 base64Decode(
                                   GlobalVar.listVehicle[widget.index].photo,
                                 ),
-                                width: 150,
-                                height: 150,
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
                               )
                             : displayImage,
                         width: MediaQuery.of(context).size.width * 0.8,
