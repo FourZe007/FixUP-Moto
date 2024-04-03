@@ -98,6 +98,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
       // NEW
       String message =
           '[FIXUP MOTO] ${randomNumber.toString()} adalah kode registrasi Anda. Demi Keamanan, jangan bagikan kode ini. Kode ini kadaluarsa dalam 1 menit.';
+
       mapSendOTP = await GlobalAPI.fetchSendOTP(
         '62${GlobalUser.phone}',
         message,
@@ -198,210 +199,225 @@ class _VerifyAccountState extends State<VerifyAccount> {
           // Prevent the default back button behavior
           return true;
         },
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            // backgroundColor: Colors.white,
-            // backgroundColor: const Color(0xFFFE0000),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            leading: Container(
-              width: 15.0,
-              height: 15.0,
-              margin: const EdgeInsets.only(top: 10.0, left: 10.0),
-              padding: const EdgeInsets.only(left: 8.0),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(40.0),
-              ),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              // backgroundColor: Colors.white,
+              // backgroundColor: const Color(0xFFFE0000),
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              leading: Container(
+                width: 15.0,
+                height: 15.0,
+                margin: const EdgeInsets.only(top: 10.0, left: 10.0),
+                padding: const EdgeInsets.only(left: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(40.0),
                 ),
-                //replace with our own icon data.
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
+                  //replace with our own icon data.
+                ),
               ),
             ),
-          ),
-          body: Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('./assets/login-background.png'),
-                fit: BoxFit.cover,
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('./assets/login-background.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    // color: Colors.white,
-                    height: MediaQuery.of(context).size.height * 0.67,
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            LabelTitleStatic(
-                              'VERIFICATION',
-                              GlobalFont.titleLoginFontW2,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.04,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      // color: Colors.white,
+                      height: MediaQuery.of(context).size.height * 0.67,
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              LabelTitleStatic(
+                                'VERIFICATION',
+                                GlobalFont.titleLoginFontW2,
                               ),
-                              child: const Text(
-                                'Please enter your verification code from Whatsapp',
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            OTPTextField(
-                              length: 4,
-                              width: MediaQuery.of(context).size.width,
-                              fieldWidth: 80,
-                              style: const TextStyle(fontSize: 17),
-                              textFieldAlignment: MainAxisAlignment.spaceAround,
-                              fieldStyle: FieldStyle.underline,
-                              onChanged: (pin) {
-                                otp = pin;
-                              },
-                              onCompleted: (pin) {
-                                otp = pin;
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.04,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.035,
-                              ),
-                              child: Text(
-                                GlobalVar.registerAlert,
-                                style: const TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.04,
+                                ),
+                                child: const Text(
+                                  'Please enter your verification code from Whatsapp',
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            AnimatedContainer(
-                              duration: const Duration(seconds: 2),
-                              child: Container(
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              OTPTextField(
+                                length: 4,
+                                width: MediaQuery.of(context).size.width,
+                                fieldWidth: 80,
+                                style: const TextStyle(fontSize: 17),
+                                textFieldAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                fieldStyle: FieldStyle.underline,
+                                onChanged: (pin) {
+                                  otp = pin;
+                                },
+                                onCompleted: (pin) {
+                                  otp = pin;
+                                },
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.04,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
                                 margin: EdgeInsets.only(
                                   left:
                                       MediaQuery.of(context).size.width * 0.035,
                                 ),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shadowColor: Colors.grey,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                  // NEW
-                                  // sblmnya value param onPressed cuma panggil function sendOTP
-                                  onPressed: isRun == false ? sendOTP : null,
-                                  // NEW
-                                  child: Text(
-                                    'Resend OTP',
-                                    style: GlobalFont.middlebigfontMItalic,
+                                child: Text(
+                                  GlobalVar.registerAlert,
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              margin: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.035,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.0),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors
-                                        .grey, // Adjust shadow color as needed
-                                    offset: Offset(
-                                        2.0, 4.0), // Adjust shadow offset
-                                    blurRadius:
-                                        5.0, // Adjust shadow blur radius
-                                    spreadRadius:
-                                        1.0, // Adjust shadow spread radius
+                            ],
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.01,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(seconds: 2),
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.035,
                                   ),
-                                ],
-                              ),
-                              child: Text(
-                                '${_remainingDuration}s',
-                                style: GlobalFont.mediumbigfontMbutton,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    // color: Colors.white,
-                    height: MediaQuery.of(context).size.height * 0.18,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GlobalVar.isLoading
-                                ? const CircleLoading()
-                                : Tombol(
-                                    'VERIFY',
-                                    verify,
-                                    lebar:
-                                        MediaQuery.of(context).size.width * 0.9,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      shadowColor: Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                    ),
+                                    // NEW
+                                    // sblmnya value param onPressed cuma panggil function sendOTP
+                                    onPressed: isRun == false ? sendOTP : null,
+                                    // NEW
+                                    child: Text(
+                                      'Resend OTP',
+                                      style: GlobalFont.middlebigfontMItalic,
+                                    ),
                                   ),
-                          ],
-                        ),
-                      ],
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.04,
+                                margin: EdgeInsets.only(
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.035,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors
+                                          .grey, // Adjust shadow color as needed
+                                      offset: Offset(
+                                          2.0, 4.0), // Adjust shadow offset
+                                      blurRadius:
+                                          5.0, // Adjust shadow blur radius
+                                      spreadRadius:
+                                          1.0, // Adjust shadow spread radius
+                                    ),
+                                  ],
+                                ),
+                                child: Text(
+                                  '${_remainingDuration}s',
+                                  style: GlobalFont.mediumbigfontMbutton,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      // color: Colors.white,
+                      height: MediaQuery.of(context).size.height * 0.18,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GlobalVar.isLoading
+                                  ? const CircleLoading()
+                                  : Tombol(
+                                      'VERIFY',
+                                      verify,
+                                      lebar: MediaQuery.of(context).size.width *
+                                          0.9,
+                                    ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

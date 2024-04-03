@@ -168,163 +168,173 @@ class _EditProfileState extends State<EditProfile> {
         onWillPop: () async {
           return true;
         },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Edit Profile',
-              style: GlobalFont.giantfontM,
-            ),
-            // backgroundColor: const Color(0xFFF59842),
-            // backgroundColor: Colors.red,
-            // backgroundColor: const Color(0xFF99CCFF),
-            backgroundColor: const Color(0xFFFE0000),
-            leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Edit Profile',
+                style: GlobalFont.giantfontM,
               ),
-              //replace with our own icon data.
+              // backgroundColor: const Color(0xFFF59842),
+              // backgroundColor: Colors.red,
+              // backgroundColor: const Color(0xFF99CCFF),
+              backgroundColor: const Color(0xFFFE0000),
+              leading: IconButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.black,
+                ),
+                //replace with our own icon data.
+              ),
             ),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.045,
-                    right: MediaQuery.of(context).size.width * 0.03,
-                    top: MediaQuery.of(context).size.height * 0.03,
-                    bottom: MediaQuery.of(context).size.height * 0.005,
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.045,
+                      right: MediaQuery.of(context).size.width * 0.03,
+                      top: MediaQuery.of(context).size.height * 0.03,
+                      bottom: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: Text(
+                      'Nomor Telepon',
+                      style: GlobalFont.bigfontR,
+                    ),
                   ),
-                  child: Text(
-                    'Nomor Telepon',
-                    style: GlobalFont.bigfontR,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: CustomUserInput(
-                    setNumber,
-                    number,
-                    isDataAvailable: true,
-                    hint: 'nomor telepon',
-                    isIcon: true,
-                    icon: Icons.phone,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.045,
-                    right: MediaQuery.of(context).size.width * 0.03,
-                    top: MediaQuery.of(context).size.height * 0.015,
-                    bottom: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: Text(
-                    'Nama',
-                    style: GlobalFont.bigfontR,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: CustomUserInput(
-                    setName,
-                    name,
-                    isCapital: true,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'nama',
-                    isIcon: true,
-                    icon: Icons.person,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.045,
-                    right: MediaQuery.of(context).size.width * 0.03,
-                    top: MediaQuery.of(context).size.height * 0.015,
-                    bottom: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: Text(
-                    'ID',
-                    style: GlobalFont.bigfontR,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: CustomUserInput(
-                    setID,
-                    id,
-                    isDataAvailable: true,
-                    hint: 'id',
-                    isIcon: true,
-                    icon: Icons.info_rounded,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.045,
-                    right: MediaQuery.of(context).size.width * 0.03,
-                    top: MediaQuery.of(context).size.height * 0.015,
-                    bottom: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: Text(
-                    'Email',
-                    style: GlobalFont.bigfontR,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: MediaQuery.of(context).size.height * 0.005,
-                  ),
-                  child: CustomUserInput(
-                    setEmail,
-                    email,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'email',
-                    isIcon: true,
-                    icon: Icons.mail_rounded,
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.0175,
-                  ),
-                  // decoration: BoxDecoration(
-                  //   border: Border.all(color: Colors.black),
-                  // ),
-                  child: AnimatedContainer(
-                    duration: const Duration(seconds: 1),
+                  Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.03,
-                      vertical: MediaQuery.of(context).size.width * 0.04,
+                      vertical: MediaQuery.of(context).size.height * 0.005,
                     ),
-                    child: Tombol(
-                      'SAVE',
-                      saveProfile,
-                      lebar: MediaQuery.of(context).size.width,
-                      // ga pengaruh, karena param disable di command
-                      disable: (name != GlobalVar.listUserData[0].memberName ||
-                              email != GlobalVar.listUserData[0].email)
-                          ? false
-                          : true,
+                    child: CustomUserInput(
+                      setNumber,
+                      number,
+                      isDataAvailable: true,
+                      hint: 'nomor telepon',
+                      isIcon: true,
+                      icon: Icons.phone,
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.045,
+                      right: MediaQuery.of(context).size.width * 0.03,
+                      top: MediaQuery.of(context).size.height * 0.015,
+                      bottom: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: Text(
+                      'Nama',
+                      style: GlobalFont.bigfontR,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: CustomUserInput(
+                      setName,
+                      name,
+                      isCapital: true,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'nama',
+                      isIcon: true,
+                      icon: Icons.person,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.045,
+                      right: MediaQuery.of(context).size.width * 0.03,
+                      top: MediaQuery.of(context).size.height * 0.015,
+                      bottom: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: Text(
+                      'ID',
+                      style: GlobalFont.bigfontR,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: CustomUserInput(
+                      setID,
+                      id,
+                      isDataAvailable: true,
+                      hint: 'id',
+                      isIcon: true,
+                      icon: Icons.info_rounded,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.045,
+                      right: MediaQuery.of(context).size.width * 0.03,
+                      top: MediaQuery.of(context).size.height * 0.015,
+                      bottom: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: Text(
+                      'Email',
+                      style: GlobalFont.bigfontR,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: MediaQuery.of(context).size.height * 0.005,
+                    ),
+                    child: CustomUserInput(
+                      setEmail,
+                      email,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'email',
+                      isIcon: true,
+                      icon: Icons.mail_rounded,
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.0175,
+                    ),
+                    // decoration: BoxDecoration(
+                    //   border: Border.all(color: Colors.black),
+                    // ),
+                    child: AnimatedContainer(
+                      duration: const Duration(seconds: 1),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.03,
+                        vertical: MediaQuery.of(context).size.width * 0.04,
+                      ),
+                      child: Tombol(
+                        'SAVE',
+                        saveProfile,
+                        lebar: MediaQuery.of(context).size.width,
+                        // ga pengaruh, karena param disable di command
+                        disable:
+                            (name != GlobalVar.listUserData[0].memberName ||
+                                    email != GlobalVar.listUserData[0].email)
+                                ? false
+                                : true,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

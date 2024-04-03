@@ -302,7 +302,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     print('Device Name: ${GlobalUser.deviceName}');
 
     // ignore: use_build_context_synchronously
-    Navigator.pushReplacementNamed(context, '/init');
+    // Navigator.pushReplacementNamed(context, '/init');
+    Navigator.pushNamedAndRemoveUntil(context, '/init', (r) => false);
   }
 
   @override
@@ -509,7 +510,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 ),
               ),
               Text(
-                'Version 1.0.4',
+                'Version 1.0.5',
                 style: GlobalFont.middlebigfontM,
               ),
             ],

@@ -1,4 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:fixupmoto/global/model.dart';
+import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fixupmoto/global/api.dart';
@@ -27,13 +29,18 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
   bool isEmpty = false;
 
+  List<Map<String, dynamic>> listVehicle = [];
+  String vehicle = '';
+
+  ModelSendOTP mapSendOTP = ModelSendOTP(resultMessage: '');
+
   void setDate(String value) {
     date = value;
   }
 
   void setModelName(String value) {
-    GlobalVar.setVehicle = value;
-    print(GlobalVar.setVehicle);
+    vehicle = value;
+    print(vehicle);
   }
 
   void setPukul(String value) {
@@ -48,17 +55,17 @@ class _ServiceBookingState extends State<ServiceBooking> {
     complaint = value;
   }
 
-  void submitBook() async {
-    modelName = GlobalVar.setVehicle.split(' - ')[0];
-    plateNumber = GlobalVar.setVehicle.split(' - ')[1];
-    print('Cabang - ${widget.dealerName}');
-    print('Nama Member: ${GlobalVar.listUserData[0].memberName}');
-    print('Telepon Member: ${GlobalVar.listUserData[0].phoneNumber}');
-    print('Tanggal: $date');
-    print('Model Kendaraan: $modelName');
-    print('Pukul: $pukul');
-    print('Plat Nomor: $plateNumber');
-    print('Komplain: $complaint');
+  void submitBook(BuildContext context) async {
+    modelName = vehicle.split(' - ')[0];
+    plateNumber = vehicle.split(' - ')[1];
+    // print('Cabang - ${widget.dealerName}');
+    // print('Nama Member: ${GlobalVar.listUserData[0].memberName}');
+    // print('Telepon Member: ${GlobalVar.listUserData[0].phoneNumber}');
+    // print('Tanggal: $date');
+    // print('Model Kendaraan: $modelName');
+    // print('Pukul: $pukul');
+    // print('Plat Nomor: $plateNumber');
+    // print('Komplain: $complaint');
 
     GlobalVar.listReqBook = await GlobalAPI.fetchInsertBookReq(
       '1',
@@ -94,13 +101,27 @@ class _ServiceBookingState extends State<ServiceBooking> {
       ),
     );
 
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
+
+    String message =
+        '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage} adalah kode booking Anda. Demi Keamanan, jangan bagikan kode ini dan mohon disimpan.';
+
+    mapSendOTP = await GlobalAPI.fetchSendOTP(
+      '62${GlobalUser.phone}',
+      message,
+      'poco-phone',
+      // 'realme-tab',
+      'text',
+    );
   }
 
-  void setVehicle() async {
-    GlobalVar.listSetVehicle = await GlobalAPI.fetchSetVehicle();
+  Stream<List<Map<String, dynamic>>> setVehicle() async* {
+    listVehicle = await GlobalAPI.fetchSetVehicle();
+    print('List Vehicle: $listVehicle');
+    yield listVehicle;
   }
 
   @override
@@ -131,232 +152,486 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
   @override
   Widget build(BuildContext context) {
-    setVehicle();
-
     return WillPopScope(
       onWillPop: () async {
         // Prevent the default back button behavior
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Service Booking',
-            style: GlobalFont.giantfontM,
-          ),
-          // backgroundColor: const Color(0xFFF59842),
-          // backgroundColor: Colors.red,
-          // backgroundColor: const Color(0xFF99CCFF),
-          backgroundColor: const Color(0xFFFE0000),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Service Booking',
+              style: GlobalFont.giantfontM,
             ),
-            //replace with our own icon data.
+            // backgroundColor: const Color(0xFFF59842),
+            // backgroundColor: Colors.red,
+            // backgroundColor: const Color(0xFF99CCFF),
+            backgroundColor: const Color(0xFFFE0000),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              //replace with our own icon data.
+            ),
           ),
-        ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin:
-                      const EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Nama Bengkel',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        widget.dealerName,
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0125,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Nama',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Text(
-                        GlobalVar.listUserData.isNotEmpty
-                            ? GlobalVar.listUserData[0].memberName
-                            : '',
-                        style: GlobalFont.giantfontR,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0125,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Nomor Telepon',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0125,
-                      ),
-                      Text(
-                        GlobalVar.listUserData.isNotEmpty
-                            ? '0${GlobalVar.listUserData[0].phoneNumber}'
-                            : '',
-                        style: GlobalFont.giantfontR,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Tanggal',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      CustomDatetimePicker(
-                        date,
-                        setDate,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Pukul',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      UserTimeAsset(
-                        setPukul,
-                        pukul,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Model Kendaraan',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      CustomDropDown(
-                        listData: GlobalVar.listSetVehicle,
-                        inputan: GlobalVar.listSetVehicle[0]['value'],
-                        disable: (isEmpty) ? true : false,
-                        hint: 'kendaraan',
-                        handle: setModelName,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Keluhan',
-                        style: TextStyle(fontSize: 15.0),
-                      ),
-                      const SizedBox(height: 5.0),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
+          body: (listVehicle.isEmpty)
+              ? StreamBuilder(
+                  stream: setVehicle(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircleLoading());
+                    } else if (snapshot.hasData) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.white,
+                          color: Colors.grey[200],
                         ),
-                        child: TextField(
-                          inputFormatters: [UpperCaseText()],
-                          decoration: const InputDecoration(
-                            hintText: 'Masukkan keluhan',
-                            border: InputBorder.none,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0, top: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Nama Bengkel',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 10.0),
+                                    Text(
+                                      widget.dealerName,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0125,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Nama',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Text(
+                                      GlobalVar.listUserData.isNotEmpty
+                                          ? GlobalVar.listUserData[0].memberName
+                                          : '',
+                                      style: GlobalFont.giantfontR,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0125,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Nomor Telepon',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.0125,
+                                    ),
+                                    Text(
+                                      GlobalVar.listUserData.isNotEmpty
+                                          ? '0${GlobalVar.listUserData[0].phoneNumber}'
+                                          : '',
+                                      style: GlobalFont.giantfontR,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Tanggal',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    CustomDatetimePicker(
+                                      date,
+                                      setDate,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Pukul',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    UserTimeAsset(
+                                      setPukul,
+                                      pukul,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Model Kendaraan',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    CustomDropDown(
+                                      listData: snapshot.data!,
+                                      inputan: snapshot.data![0]['value'],
+                                      disable: (isEmpty) ? true : false,
+                                      hint: 'kendaraan',
+                                      handle: setModelName,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Keluhan',
+                                      style: TextStyle(fontSize: 15.0),
+                                    ),
+                                    const SizedBox(height: 5.0),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Colors.white,
+                                      ),
+                                      child: TextField(
+                                        inputFormatters: [UpperCaseText()],
+                                        decoration: const InputDecoration(
+                                          hintText: 'Masukkan keluhan',
+                                          border: InputBorder.none,
+                                        ),
+                                        controller: TextEditingController(
+                                            text: complaint),
+                                        onChanged: (newValues) =>
+                                            setComplaint(newValues),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(
+                                    left: 25.0, right: 25.0),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.17,
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Tombol(
+                                      'BOOK NOW!',
+                                      () => submitBook(context),
+                                      lebar: MediaQuery.of(context).size.width *
+                                          0.85,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0225,
+                              ),
+                            ],
                           ),
-                          controller: TextEditingController(text: complaint),
-                          onChanged: (newValues) => setComplaint(newValues),
                         ),
+                      );
+                    }
+                    return SnackBar(
+                      content: Text(
+                        'Data not Found',
+                        style: GlobalFont.giantfontM,
                       ),
-                    ],
+                    );
+                  },
+                )
+              : Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                  ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Nama Bengkel',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 10.0),
+                              Text(
+                                widget.dealerName,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0125,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Nama',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Text(
+                                GlobalVar.listUserData.isNotEmpty
+                                    ? GlobalVar.listUserData[0].memberName
+                                    : '',
+                                style: GlobalFont.giantfontR,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0125,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Nomor Telepon',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.0125,
+                              ),
+                              Text(
+                                GlobalVar.listUserData.isNotEmpty
+                                    ? '0${GlobalVar.listUserData[0].phoneNumber}'
+                                    : '',
+                                style: GlobalFont.giantfontR,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Tanggal',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              CustomDatetimePicker(
+                                date,
+                                setDate,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Pukul',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              UserTimeAsset(
+                                setPukul,
+                                pukul,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Model Kendaraan',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              CustomDropDown(
+                                listData: listVehicle,
+                                inputan: listVehicle[0]['value'],
+                                disable: (isEmpty) ? true : false,
+                                hint: 'kendaraan',
+                                handle: setModelName,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Keluhan',
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              const SizedBox(height: 5.0),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Colors.white,
+                                ),
+                                child: TextField(
+                                  inputFormatters: [UpperCaseText()],
+                                  decoration: const InputDecoration(
+                                    hintText: 'Masukkan keluhan',
+                                    border: InputBorder.none,
+                                  ),
+                                  controller:
+                                      TextEditingController(text: complaint),
+                                  onChanged: (newValues) =>
+                                      setComplaint(newValues),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                        Container(
+                          margin:
+                              const EdgeInsets.only(left: 25.0, right: 25.0),
+                          height: MediaQuery.of(context).size.height * 0.17,
+                          alignment: Alignment.bottomCenter,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Tombol(
+                                'BOOK NOW!',
+                                () => submitBook(context),
+                                lebar: MediaQuery.of(context).size.width * 0.85,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.0225,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                  height: MediaQuery.of(context).size.height * 0.17,
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Tombol(
-                        'BOOK NOW!',
-                        submitBook,
-                        lebar: MediaQuery.of(context).size.width * 0.85,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0225,
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

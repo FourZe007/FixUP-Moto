@@ -310,208 +310,219 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
         // Prevent the default back button behavior
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            (widget.mode == 1) ? 'Tambah Kendaraan' : 'Edit Kendaraan',
-            style: GlobalFont.giantfontM,
-          ),
-          // backgroundColor: const Color(0xFFF59842),
-          // backgroundColor: Colors.red,
-          backgroundColor: const Color(0xFFFE0000),
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              (widget.mode == 1) ? 'Tambah Kendaraan' : 'Edit Kendaraan',
+              style: GlobalFont.giantfontM,
             ),
-            //replace with our own icon data.
+            // backgroundColor: const Color(0xFFF59842),
+            // backgroundColor: Colors.red,
+            backgroundColor: const Color(0xFFFE0000),
+            leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.black,
+              ),
+              //replace with our own icon data.
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LabelTitleStatic(
-                    'DATA KENDARAAN',
-                    GlobalFont.middlegigafontC,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0225,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      uploadImage();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200]!,
-                        borderRadius: BorderRadius.circular(10.0),
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: CustomImage(
-                        image: (widget.mode == 2 &&
-                                GlobalVar.listVehicle[widget.index].photo != '')
-                            ? Image.memory(
-                                base64Decode(
-                                  GlobalVar.listVehicle[widget.index].photo,
-                                ),
-                                width: MediaQuery.of(context).size.width * 0.25,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                              )
-                            : displayImage,
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    LabelTitleStatic(
+                      'DATA KENDARAAN',
+                      GlobalFont.middlegigafontC,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0225,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        uploadImage();
+                      },
+                      child: Container(
                         width: MediaQuery.of(context).size.width * 0.8,
-                        height: MediaQuery.of(context).size.height * 0.35,
-                        borderRadius: 10.0,
+                        height: MediaQuery.of(context).size.height * 0.4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200]!,
+                          borderRadius: BorderRadius.circular(10.0),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: CustomImage(
+                          image: (widget.mode == 2 &&
+                                  GlobalVar.listVehicle[widget.index].photo !=
+                                      '')
+                              ? Image.memory(
+                                  base64Decode(
+                                    GlobalVar.listVehicle[widget.index].photo,
+                                  ),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                )
+                              : displayImage,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          borderRadius: 10.0,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0225,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setPlateNo,
-                    plateNo,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'plat nomor *',
-                    isCapital: true,
-                    icon: Icons.credit_card_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setUnitID,
-                    unitID,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'tipe kendaraan *',
-                    isCapital: true,
-                    icon: Icons.directions_car_filled_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setChasisNo,
-                    chasisNo,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'nomor chasis',
-                    isCapital: true,
-                    icon: Icons.numbers_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setEngineNo,
-                    engineNo,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'nomor mesin',
-                    isCapital: true,
-                    icon: Icons.abc_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setColor,
-                    color,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'warna',
-                    isCapital: true,
-                    icon: Icons.color_lens_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0125,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomUserInput(
-                    setYear,
-                    year,
-                    isDataAvailable: true,
-                    mode: 0,
-                    hint: 'tahun kendaraan',
-                    isCapital: true,
-                    icon: Icons.date_range_rounded,
-                    isIcon: true,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.0225,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).size.height * 0.025,
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0225,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setPlateNo,
+                      plateNo,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'plat nomor *',
+                      isCapital: true,
+                      icon: Icons.credit_card_rounded,
+                      isIcon: true,
                     ),
-                    child: Tombol(
-                      (widget.mode == 1) ? 'TAMBAH' : 'SIMPAN',
-                      submitData,
-                      lebar: MediaQuery.of(context).size.width * 0.8,
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setUnitID,
+                      unitID,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'tipe kendaraan *',
+                      isCapital: true,
+                      icon: Icons.directions_car_filled_rounded,
+                      isIcon: true,
                     ),
-                  ),
-                ],
-              ),
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height * 0.0125,
-              // ),
-            ],
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setChasisNo,
+                      chasisNo,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'nomor chasis',
+                      isCapital: true,
+                      icon: Icons.numbers_rounded,
+                      isIcon: true,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setEngineNo,
+                      engineNo,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'nomor mesin',
+                      isCapital: true,
+                      icon: Icons.abc_rounded,
+                      isIcon: true,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setColor,
+                      color,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'warna',
+                      isCapital: true,
+                      icon: Icons.color_lens_rounded,
+                      isIcon: true,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomUserInput(
+                      setYear,
+                      year,
+                      isDataAvailable: true,
+                      mode: 0,
+                      hint: 'tahun kendaraan',
+                      isCapital: true,
+                      icon: Icons.date_range_rounded,
+                      isIcon: true,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0225,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      child: Tombol(
+                        (widget.mode == 1) ? 'TAMBAH' : 'SIMPAN',
+                        submitData,
+                        lebar: MediaQuery.of(context).size.width * 0.8,
+                      ),
+                    ),
+                  ],
+                ),
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.0125,
+                // ),
+              ],
+            ),
           ),
         ),
       ),

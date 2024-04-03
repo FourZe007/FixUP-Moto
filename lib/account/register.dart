@@ -496,181 +496,190 @@ class _RegisterState extends State<Register> {
           contentType: ContentType.warning,
         ),
       ),
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: Container(
-            width: 15.0,
-            height: 15.0,
-            margin: const EdgeInsets.only(top: 10.0, left: 10.0),
-            padding: const EdgeInsets.only(left: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(40.0),
-            ),
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: Container(
+              width: 15.0,
+              height: 15.0,
+              margin: const EdgeInsets.only(top: 10.0, left: 10.0),
+              padding: const EdgeInsets.only(left: 8.0),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(40.0),
               ),
-              //replace with our own icon data.
+              child: IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+                //replace with our own icon data.
+              ),
             ),
           ),
-        ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('./assets/login-background.png'),
-              fit: BoxFit.cover,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('./assets/login-background.png'),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.725,
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.05,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.025,
-                            ),
-                            child: LabelTitleStatic(
-                              'REGISTRATION',
-                              GlobalFont.titleLoginFontW2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.04,
-                            ),
-                            child: const Text(
-                              'Please complete your identity',
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.04,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomUserInput(
-                            setName,
-                            name,
-                            mode: 0,
-                            hint: 'nama *',
-                            isCapital: true,
-                            icon: Icons.person_rounded,
-                            isIcon: true,
-                            autoFocus: true,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomUserInput(
-                            setEmail,
-                            email,
-                            mode: 0,
-                            hint: 'email',
-                            icon: Icons.mail_rounded,
-                            isIcon: true,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CustomUserInput(
-                            setPass,
-                            password,
-                            mode: 0,
-                            hint: 'password *',
-                            isPass: true,
-                            icon: Icons.lock,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.04,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.035,
-                            ),
-                            child: Text(
-                              GlobalVar.registerAlert,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.725,
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.025,
+                              ),
+                              child: LabelTitleStatic(
+                                'REGISTRATION',
+                                GlobalFont.titleLoginFontW2,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.125,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GlobalVar.isLoading
-                              ? const CircleLoading()
-                              : Tombol(
-                                  'SIGN UP',
-                                  register,
-                                  lebar:
-                                      MediaQuery.of(context).size.width * 0.9,
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.04,
+                              ),
+                              child: const Text(
+                                'Please complete your identity',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CustomUserInput(
+                              setName,
+                              name,
+                              mode: 0,
+                              hint: 'nama *',
+                              isCapital: true,
+                              icon: Icons.person_rounded,
+                              isIcon: true,
+                              autoFocus: true,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CustomUserInput(
+                              setEmail,
+                              email,
+                              mode: 0,
+                              hint: 'email',
+                              icon: Icons.mail_rounded,
+                              isIcon: true,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CustomUserInput(
+                              setPass,
+                              password,
+                              mode: 0,
+                              hint: 'password *',
+                              isPass: true,
+                              icon: Icons.lock,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.035,
+                              ),
+                              child: Text(
+                                GlobalVar.registerAlert,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                        ],
-                      ),
-                    ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.125,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GlobalVar.isLoading
+                                ? const CircleLoading()
+                                : Tombol(
+                                    'SIGN UP',
+                                    register,
+                                    lebar:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                  ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/button/date_filter_button.dart';
 import 'package:fixupmoto/widget/button/filter_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -411,13 +412,6 @@ class _MessagesState extends State<Messages> {
                                       'Filters',
                                       style: GlobalFont.gigafontR,
                                     ),
-                                    TextButton(
-                                      onPressed: null,
-                                      child: Text(
-                                        'Reset',
-                                        style: GlobalFont.bigfontCUnderlined,
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -538,6 +532,17 @@ class _MessagesState extends State<Messages> {
                         ],
                       ),
                     ),
+                    // Belum ada function
+                    // SizedBox(
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: TextButton(
+                    //     onPressed: null,
+                    //     child: Text(
+                    //       'Reset',
+                    //       style: GlobalFont.bigfontCUnderlined,
+                    //     ),
+                    //   ),
+                    // ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

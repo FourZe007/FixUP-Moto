@@ -205,6 +205,30 @@ class _ProfileState extends State<Profile> {
                                             onTap: () {
                                               FlutterClipboard.copy(GlobalVar
                                                   .listUserData[0].memberID);
+
+                                              final snackBar = SnackBar(
+                                                /// need to set following properties for best effect of awesome_snackbar_content
+                                                elevation: 0,
+                                                duration:
+                                                    const Duration(seconds: 2),
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                content: AwesomeSnackbarContent(
+                                                  title: 'SUCCESS!',
+                                                  message: 'Berhasil di copy',
+
+                                                  /// change contentType to ContentType.success,
+                                                  /// ContentType.warning or ContentType.help for variants
+                                                  contentType:
+                                                      ContentType.success,
+                                                ),
+                                              );
+
+                                              ScaffoldMessenger.of(context)
+                                                ..hideCurrentSnackBar()
+                                                ..showSnackBar(snackBar);
                                             },
                                             child: const Icon(
                                               Icons.copy,

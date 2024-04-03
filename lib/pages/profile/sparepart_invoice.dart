@@ -265,7 +265,8 @@ class _SparepartInvoiceState extends State<SparepartInvoice> {
                               border: Border.all(
                                 // color: const Color(0xFFF59842),
                                 // color: Colors.red,
-                                color: const Color(0xFF99CCFF),
+                                // color: const Color(0xFF99CCFF),
+                                color: const Color(0xFFFE0000),
                                 width: 3,
                               ),
                             ),
