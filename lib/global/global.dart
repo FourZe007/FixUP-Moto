@@ -3,7 +3,6 @@ import 'package:fixupmoto/widget/carousel/notification_length_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 class GlobalUser {
   static String? id = '';
@@ -16,7 +15,7 @@ class GlobalUser {
 }
 
 class GlobalVar {
-  static bool isLoading = true;
+  static bool isLoading = false;
   static bool isChange = false;
 
   // About Apps - String only
@@ -28,6 +27,9 @@ class GlobalVar {
   // About Apps - Shared Preference
   static String currentAppVersion = '';
 
+  static List<dynamic> controllerList = [];
+  static List<dynamic> controllerListLink = [];
+  static List<dynamic> controllerListType = [];
   static List<ModelResultMessage> listRegister = [];
   static List<ModelWorkshopDetail> listWorkshopDetail = [];
   static List<ModelBrowseUser> listUserData = [];
@@ -299,6 +301,15 @@ class GlobalFont {
     backgroundColor: Colors.transparent,
   );
 
+  static TextStyle bigfontRUnderlinedButton = TextStyle(
+    color: Colors.blue,
+    fontFamily: GlobalFontFamily.fontRubik,
+    fontSize: GlobalSize.bigfont,
+    fontWeight: FontWeight.bold,
+    backgroundColor: Colors.transparent,
+    decoration: TextDecoration.underline,
+  );
+
   static TextStyle middlegiantfontR = TextStyle(
     color: Colors.black,
     fontFamily: GlobalFontFamily.fontRubik,
@@ -322,6 +333,13 @@ class GlobalFont {
 
   static TextStyle gigafontR = TextStyle(
     color: Colors.black,
+    fontFamily: GlobalFontFamily.fontRubik,
+    fontSize: GlobalSize.gigafont,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle gigafontRWhite = TextStyle(
+    color: Colors.white,
     fontFamily: GlobalFontFamily.fontRubik,
     fontSize: GlobalSize.gigafont,
     fontWeight: FontWeight.bold,

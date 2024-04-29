@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -8,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/carousel/carousel_notifier.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -16,10 +16,12 @@ import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/home/modify_vehicle.dart';
 import 'package:fixupmoto/pages/home/service_history.dart';
-import 'package:fixupmoto/widget/image/customimage.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:chewie/chewie.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:upgrader/upgrader.dart';
 // Install Chiwie to display and play a video!
@@ -36,121 +38,121 @@ class _HomeState extends State<Home> {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   String url = '';
   List<String> homeImages = [];
+  bool isLoading = false;
 
-  int _currentHeader = 0;
   int _currentContent = 0;
 
   List<ModelResultMessage> listRegistToken = [];
 
   List<VideoPlayerController> videoPlayerControllerList = [];
   List<ChewieController> chewieControllerList = [];
-  List<dynamic> controllerList = [];
-  List<dynamic> controllerListType = [];
+  List<dynamic> tempControllerList = [];
+  List<dynamic> tempControllerListType = [];
+
+  List<ModelNotificationDetail> tempNotifDetail = [];
+  List<ModelBrowseUser> tempBrowseUser = [];
+  String deviceName = '';
+  List<ModelBrowseUser> tempUserData = [];
+  List<ModelVehicleDetail> tempVehicleList = [];
+
+  String longLivedAccessToken =
+      'IGQWRNUS1scEw2azNvclFBVUVvQ0dpVUkzdnRnbTFKQlZAweXBLMDA5N2NBYjQzczJwYkJVMklxZADZArQmkxSEFCS2pvbUZAlcTI5WlVxc2Y0WV9wVE15RHI5LXlOZATl3QURVSjhzUU9jaHBUZAwZDZD';
+  ModelAccessToken accessTokenModel =
+      ModelAccessToken(accessToken: '', bearer: '', duration: 0);
 
   // Prevent blinking between Auto-Played and Non Auto-Played Carousel
   final carouselNotifier = CarouselChangeNotifier();
 
+  void loadingTrigger() {
+    setState(() {
+      GlobalVar.isLoading = !GlobalVar.isLoading;
+    });
+  }
+
   List<Widget> getCarouselHeaderItems(BuildContext context) {
     return [
-      for (int i = 0; i < GlobalVar.listVehicle.length; i++)
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            (GlobalVar.listVehicle[i].photo == '')
-                ? CustomImage(
-                    image: Image.asset(
-                      'assets/bike-removebg.png',
-                      width: 130,
-                      height: 130,
-                    ),
-                    isIcon: true,
-                  )
-                : CustomImage(
-                    image: Image.memory(
-                      base64Decode(GlobalVar.listVehicle[i].photo),
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: MediaQuery.of(context).size.height * 0.2,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    // height: MediaQuery.of(context).size.height * 0.3,
+      for (int i = 0; i < 3; i++)
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFFFE0000),
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.looks_one_rounded,
+                size: 65.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    child: (GlobalVar.listVehicle[i].color == '-')
+                        ? Text(
+                            GlobalVar.listVehicle[i].unitID,
+                            style: GlobalFont.middlegiantfontM,
+                          )
+                        : Text(
+                            '${GlobalVar.listVehicle[i].unitID} - ${GlobalVar.listVehicle[i].color}',
+                            style: GlobalFont.middlegiantfontM,
+                          ),
                   ),
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.01,
-            // ),
-            (GlobalVar.isChange == true)
-                ? const Center(child: CircleLoading())
-                : Row(
+                  IconButton(
+                    onPressed: () => editVehicle(2, index: i),
+                    icon: const Icon(
+                      Icons.edit,
+                      size: 23.0,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.08,
+                width: MediaQuery.of(context).size.width * 0.175,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    padding: const EdgeInsets.all(5.0),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ServiceHistory(i),
+                      ),
+                    );
+                    setState(() => GlobalVar.listVehicle);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        alignment: Alignment.center,
-                        height: MediaQuery.of(context).size.height * 0.05,
-                        child: (GlobalVar.listVehicle[i].color == '-')
-                            ? Text(
-                                GlobalVar.listVehicle[i].unitID,
-                                style: GlobalFont.middlegiantfontM,
-                              )
-                            : Text(
-                                '${GlobalVar.listVehicle[i].unitID} - ${GlobalVar.listVehicle[i].color}',
-                                style: GlobalFont.middlegiantfontM,
-                              ),
+                      const Icon(
+                        Icons.history_rounded,
+                        color: Colors.black,
                       ),
-                      IconButton(
-                        onPressed: () => editVehicle(2, index: i),
-                        icon: const Icon(
-                          Icons.edit,
-                          size: 23.0,
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                      const Text(
+                        'History',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                           color: Colors.black,
                         ),
                       ),
                     ],
                   ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.01,
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.08,
-              width: MediaQuery.of(context).size.width * 0.175,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  padding: const EdgeInsets.all(5.0),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ServiceHistory(i),
-                    ),
-                  );
-                  setState(() => GlobalVar.listVehicle);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.history_rounded,
-                      color: Colors.black,
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
-                    ),
-                    const Text(
-                      'History',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       Align(
         alignment: Alignment.center,
@@ -165,94 +167,14 @@ class _HomeState extends State<Home> {
     ];
   }
 
-  // maybe, ga dipake. jadi mending dihapus
-  List<Widget> getCarouselContentItems(BuildContext context) {
-    return [
-      // IMAGES
-      // Column(
-      //   children: [
-      //     for (int i = 0; i < GlobalVar.listFilteredFeeds.length; i++)
-      //       Center(
-      //         child: Container(
-      //           width: MediaQuery.of(context).size.width * 0.6,
-      //           height: MediaQuery.of(context).size.height * 0.5,
-      //           decoration: BoxDecoration(
-      //             borderRadius: BorderRadius.circular(20.0),
-      //             image: DecorationImage(
-      //               image: CachedNetworkImageProvider(
-      //                 GlobalVar.listFilteredFeeds[i],
-      //               ),
-      //               fit: BoxFit.fill,
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //   ],
-      // ),
+  Future<List<ModelVehicleDetail>> getVehicle() async {
+    tempVehicleList.addAll(await GlobalAPI.fetchGetVehicle());
 
-      // VIDEOS
-      ListView(
-        children: [
-          for (int i = 0; i < GlobalVar.listFilteredFeeds.length; i++)
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Chewie(
-                controller: ChewieController(
-                  videoPlayerController: VideoPlayerController.networkUrl(
-                    Uri.parse(GlobalVar.listFilteredFeeds[i]),
-                  ),
-                  aspectRatio: 16 / 9,
-                  autoPlay: false,
-                  looping: false,
-                  // Other Chewie options as needed
-                ),
-              ),
-            ),
-        ],
-      ),
-
-      // Center(
-      //   child: Container(
-      //     width: MediaQuery.of(context).size.width * 0.6,
-      //     height: MediaQuery.of(context).size.height * 0.3,
-      //     decoration: BoxDecoration(
-      //       borderRadius: BorderRadius.circular(20.0),
-      //       image: const DecorationImage(
-      //         image: AssetImage('./assets/offer1.jpg'),
-      //         fit: BoxFit.fill,
-      //       ),
-      //     ),
-      //   ),
-      // ),
-      // Center(
-      //   child: Container(
-      //     width: MediaQuery.of(context).size.width * 0.6,
-      //     height: MediaQuery.of(context).size.height * 0.3,
-      //     decoration: BoxDecoration(
-      //       borderRadius: BorderRadius.circular(20.0),
-      //       image: const DecorationImage(
-      //         image: AssetImage('./assets/offer2.jpg'),
-      //         fit: BoxFit.fill,
-      //       ),
-      //     ),
-      //   ),
-      // ),
-    ];
-  }
-
-  void getVehicle() async {
-    GlobalVar.listVehicle = await GlobalAPI.fetchGetVehicle();
-    print('Vehicle List Length: ${GlobalVar.listVehicle.length}');
-    // if (GlobalVar.listVehicle.isNotEmpty) {
-    //   print('Vehicle are not empty');
-    // } else {
-    //   print('Vehicle are empty');
-    // }
+    return tempVehicleList;
   }
 
   void editVehicle(int mode, {int index = 0}) async {
     if (mode == 1) {
-      _currentHeader = 0;
       _currentContent = 0;
       Navigator.push(
         context,
@@ -264,7 +186,6 @@ class _HomeState extends State<Home> {
         ),
       );
     } else if (mode == 2) {
-      _currentHeader = 0;
       _currentContent = 0;
       Navigator.push(
         context,
@@ -279,177 +200,93 @@ class _HomeState extends State<Home> {
     }
   }
 
-  void getInstagramData() async {
-    String accessToken =
-        'IGQWRQa1ZAnQ3Nuejhoel9GaDFsMVRfemxXT0wta0FHSWMtUnQzZATBDandYcjBwbkh3OS1GV0tDWGZAjeEZAkRXlxcjNFbDQtbFlmS0E1Um9pV2pqbUprN3ZAmZADd2NUNmS3llekU2SGhaYlk0UQZDZD';
+  Future<List<dynamic>> getInstagramData() async {
     if (GlobalVar.listUserData.isNotEmpty) {
-      // print('Vehicle Data');
-      setState(() => GlobalVar.isLoading = true);
-      GlobalVar.listVehicle = await GlobalAPI.fetchGetVehicle();
-      // getVehicle();
-
       videoPlayerControllerList = [];
       print('Get Instagram Feeds');
-      GlobalVar.listFeeds = await GlobalAPI.fetchGetFeeds(accessToken);
+      GlobalVar.listFeeds = [];
+
+      if (DateTime.now().day == 28) {
+        accessTokenModel =
+            await GlobalAPI.fetchGetNewAccessToken(longLivedAccessToken);
+
+        longLivedAccessToken = accessTokenModel.accessToken;
+      }
+
+      GlobalVar.listFeeds
+          .addAll(await GlobalAPI.fetchGetFeeds(longLivedAccessToken));
+      videoPlayerControllerList = [];
+      tempControllerList = [];
+      tempControllerListType = [];
 
       for (int i = 0; i < GlobalVar.listFeeds.length; i++) {
         if (GlobalVar.listFeeds[i].mediatype == 'VIDEO' &&
-            controllerList.length < 3) {
-          // GlobalVar.listFilteredFeeds.add(GlobalVar.listFeeds[i].mediaurl);
-
+            tempControllerList.length < 3) {
           VideoPlayerController controller = VideoPlayerController.networkUrl(
               Uri.parse(GlobalVar.listFeeds[i].mediaurl));
           await controller.initialize();
           videoPlayerControllerList.add(controller);
-          controllerList.add(
+          tempControllerList.add(
             ChewieController(
               videoPlayerController: controller,
               // Chewie options
             ),
           );
-          controllerListType.add('video');
+          tempControllerListType.add('video');
         } else if (GlobalVar.listFeeds[i].mediatype == 'IMAGE' &&
-            controllerList.length < 3) {
-          controllerList.add(GlobalVar.listFeeds[i].mediaurl.toString());
-          controllerListType.add('image');
+            tempControllerList.length < 3) {
+          tempControllerList.add(GlobalVar.listFeeds[i].mediaurl.toString());
+          tempControllerListType.add('image');
         }
       }
 
-      GlobalVar.listFeeds = [];
-      for (int i = 0; i < GlobalVar.listFilteredFeeds.length; i++) {
-        print('listFilteredFeeds ${i + 1}: ${GlobalVar.listFilteredFeeds[i]}');
-      }
-      print(
-          'videoPlayerControllerList Length: ${videoPlayerControllerList.length}');
-      // print('chewieControllerList Length: ${chewieControllerList.length}');
-      print('controllerList Length: ${controllerList.length}');
-
-      // GlobalVar.listNotificationDetail =
-      //     await GlobalAPI.fetchGetNotification('');
-
-      // setState(() {});
-      setState(() => GlobalVar.isLoading = false);
+      return [tempControllerList, tempControllerListType];
     } else {
-      // print('GlobalVar ListUserData is empty');
+      return [];
     }
   }
 
-  void getNotification() async {
-    GlobalVar.listNotificationDetail = [];
-    setState(() => GlobalVar.isLoading = true);
-    GlobalVar.listNotificationDetail =
-        await GlobalAPI.fetchGetNotification('', '0');
-    // GlobalVar.notificationDetailLength = 0;
-    // GlobalVar.notificationDetailLength =
-    //     GlobalVar.listNotificationDetail.length;
-    setState(() => GlobalVar.isLoading = false);
+  Future<List<ModelNotificationDetail>> getNotification() async {
+    tempNotifDetail = await GlobalAPI.fetchGetNotification('', '0');
 
-    // print('Home Notif Length: ${GlobalVar.notifLength}');
-
-    // sendNotification();
+    return tempNotifDetail;
   }
 
-  // ga dipake
-  // void getNotification() async {
-  //   GlobalVar.listNotificationDetail = await GlobalAPI.fetchGetNotification('');
-  //   setState(() {});
-  // }
-
-  // ga dipake
-  // void getFeeds() async {
-  //   videoPlayerControllerList = [];
-  //   print('Get Instagram Feeds');
-  //   GlobalVar.listFeeds = await GlobalAPI.fetchGetFeeds(
-  //     'IGQWRNRUZAoS043N0JPLTNscnJ5S2M5UTNSSGxodlJsWXJTVXBZALTJlVGlwem5JZAUdZAZAkZA1VjZADNEgxb19FUXZA3T2tRQU9xS3IwalpxVTFPQWtSN1c1YjdHb244TVNYWk1PVS1acFJIaXlxZAwZDZD',
-  //   );
-  //   for (int i = 0; i < GlobalVar.listFeeds.length; i++) {
-  //     if (GlobalVar.listFeeds[i].mediatype == 'VIDEO' &&
-  //         videoPlayerControllerList.length <= 3) {
-  //       videoPlayerControllerList.add(
-  //         VideoPlayerController.networkUrl(
-  //           Uri.parse(GlobalVar.listFeeds[i].mediaurl),
-  //         ),
-  //       );
-  //     }
-  //   }
-  //   GlobalVar.listFeeds = [];
-  //   print('Video Player Controller: ${videoPlayerControllerList[0]}');
-  //   print(
-  //       'Video Player Controller Length: ${videoPlayerControllerList.length}');
-  //   // videoControllers = GlobalVar.listFilteredFeeds
-  //   //     .map((url) => VideoPlayerController.networkUrl(Uri.parse(url)))
-  //   //     .toList();
-  //   // videoControllers[0].initialize().then((_) {
-  //   //   // Ensure the first frame is shown after initialization
-  //   //   setState(() {});
-  //   // });
-  //   // for (int i = 0; i < GlobalVar.listFeeds[0].data!.length; i++) {
-  //   //   // if (GlobalVar.listFeeds[0].data)
-  //   //   print(GlobalVar.listFeeds[0].data![i].mediatype);
-  //   // }
-  //   // GlobalVar.listFeedsType = await GlobalAPI.fetchGetFeedsType(
-  //   //   'IGQWRNRUZAoS043N0JPLTNscnJ5S2M5UTNSSGxodlJsWXJTVXBZALTJlVGlwem5JZAUdZAZAkZA1VjZADNEgxb19FUXZA3T2tRQU9xS3IwalpxVTFPQWtSN1c1YjdHb244TVNYWk1PVS1acFJIaXlxZAwZDZD',
-  //   // );
-  //   // GlobalVar.listFeedsURL = await GlobalAPI.fetchGetFeedsURL(
-  //   //   'IGQWRNRUZAoS043N0JPLTNscnJ5S2M5UTNSSGxodlJsWXJTVXBZALTJlVGlwem5JZAUdZAZAkZA1VjZADNEgxb19FUXZA3T2tRQU9xS3IwalpxVTFPQWtSN1c1YjdHb244TVNYWk1PVS1acFJIaXlxZAwZDZD',
-  //   // );
-  //   // for (int i = 0; i < GlobalVar.listFeedsType.length; i++) {
-  //   //   if (GlobalVar.listFeedsType[i].mediatype == 'IMAGE') {
-  //   //     GlobalVar.listFeeds.add(GlobalVar.listFeedsURL[i].mediaurl);
-  //   //   }
-  //   // }
-  //   // if (GlobalVar.listFeeds.isNotEmpty) {
-  //   //   print('Total Data: ${GlobalVar.listFeeds.length}');
-  //   //   print('Media Type: ${GlobalVar.listFeeds[0]}');
-  //   // } else {
-  //   //   print('Feeds Empty!');
-  //   // }
-  // }
-
-  void getUserData() async {
-    // setState(() => GlobalVar.isLoading = true);
-    GlobalVar.listUserData = await GlobalAPI.getUserData(
+  Future<List<ModelBrowseUser>> getUserData() async {
+    tempUserData.addAll(await GlobalAPI.getUserData(
       'MEMBERSHIP',
       GlobalUser.id!,
       '',
       '',
       '',
       '',
-    );
-    // print(GlobalVar.listUserData);
+    ));
 
-    getInstagramData();
-    // setState(() => GlobalVar.isLoading = false);
+    return tempUserData;
   }
 
-  void getDevice() async {
+  Future<String> getDevice() async {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      GlobalUser.deviceName = androidInfo.model;
+      deviceName = androidInfo.model;
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      GlobalUser.deviceName = iosInfo.name;
+      deviceName = iosInfo.name;
     } else {
       // Handle other platforms if needed
-      GlobalUser.deviceName = '';
+      deviceName = '';
     }
 
-    print('Device Name: ${GlobalUser.deviceName}');
+    return deviceName;
   }
 
-  Future<void> checkUser(BuildContext context) async {
+  Future checkUser(BuildContext context) async {
+    loadingTrigger();
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     GlobalUser.phone = prefs.getString('phonenumber');
     GlobalUser.pass = prefs.getString('password');
     GlobalUser.flag = prefs.getInt('flag');
-
-    // GlobalVar.listSetVehicle = await GlobalAPI.fetchSetVehicle();
-
-    print('ID: ${GlobalUser.id}');
-    print('Phone: ${GlobalUser.phone}');
-    print('Pass: ${GlobalUser.pass}');
-    print('Flag: ${GlobalUser.flag}');
 
     if (GlobalUser.id == null &&
         GlobalUser.phone == null &&
@@ -460,8 +297,16 @@ class _HomeState extends State<Home> {
         '/login',
       );
     } else {
-      // getNotification();
-      getDevice();
+      GlobalVar.listNotificationDetail = [];
+      GlobalUser.deviceName = '';
+      GlobalVar.listUserData = [];
+      GlobalVar.listVehicle = [];
+      GlobalVar.controllerList = [];
+      GlobalVar.controllerListLink = [];
+      GlobalVar.controllerListType = [];
+
+      GlobalVar.listNotificationDetail.addAll(await getNotification());
+      GlobalUser.deviceName = await getDevice();
 
       listRegistToken = await GlobalAPI.fetchRegistDevice(
         '1',
@@ -469,236 +314,428 @@ class _HomeState extends State<Home> {
         GlobalUser.deviceName,
       );
 
-      getUserData();
+      GlobalVar.listUserData.addAll(await getUserData());
+      GlobalVar.listVehicle.addAll(await getVehicle());
+      GlobalVar.controllerList.addAll(await getInstagramData());
+      GlobalVar.controllerListLink.addAll(GlobalVar.controllerList[0]);
+      GlobalVar.controllerListType.addAll(GlobalVar.controllerList[1]);
     }
+    loadingTrigger();
   }
 
   @override
   void initState() {
     super.initState();
 
-    GlobalVar.isLoading = true;
-
-    // print('Before: ${GlobalVar.listVehicle.length}');
     checkUser(context);
-    // print('After: ${GlobalVar.listVehicle.length}');
   }
 
   @override
   void dispose() {
-    for (VideoPlayerController controller in videoPlayerControllerList) {
-      controller.dispose();
-    }
-
     // TODO: implement dispose
     super.dispose();
 
     GlobalVar.listVehicle = [];
     GlobalVar.listFeeds = [];
+    tempBrowseUser = [];
+    tempControllerList = [];
+    tempControllerListType = [];
+    tempNotifDetail = [];
+    tempUserData = [];
+    tempVehicleList = [];
   }
 
   @override
   Widget build(BuildContext context) {
-    if (GlobalVar.isLoading == true) {
-      return const Center(
-        child: CircleLoading(),
-      );
-    } else {
-      return DoubleTapToExit(
-        snackBar: SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'WARNING!',
-            message: 'Tap again to exit',
+    return DoubleTapToExit(
+      snackBar: SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'WARNING!',
+          message: 'Tap again to exit',
 
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.warning,
-          ),
+          /// change contentType to ContentType.success,
+          /// ContentType.warning or ContentType.help for variants
+          contentType: ContentType.warning,
         ),
-        child: UpgradeAlert(
-          dialogStyle: UpgradeDialogStyle.cupertino,
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: const Color(0xFFFE0000),
-              elevation: 0.0,
-              toolbarHeight: 0.0,
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    decoration: const BoxDecoration(
-                      // color: Color(0xFFF59842),
-                      // color: Color(0xFF99CCFF),
-                      color: Color(0xFFFE0000),
-                      // border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30.0),
-                        bottomRight: Radius.circular(30.0),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CarouselSlider(
-                          items: getCarouselHeaderItems(context),
-                          options: CarouselOptions(
-                            height: MediaQuery.of(context).size.height * 0.425,
-                            viewportFraction: 1.0,
-                            autoPlay: false,
-                            // onPageChanged: (index, reason) {
-                            //   setState(() => _currentHeader = index);
-                            // },
-                            onPageChanged: (index, reason) {
-                              if (reason != CarouselPageChangedReason.timed) {
-                                // Don't update non-autoplay if triggered externally
-                                carouselNotifier.notify(index, _currentHeader);
-                                setState(() => _currentHeader = index);
-                              }
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
-                        ),
-                        DotsIndicator(
-                          dotsCount: getCarouselHeaderItems(context).length,
-                          position: _currentHeader,
-                          decorator: const DotsDecorator(
-                            size: Size(8.0, 8.0),
-                            activeSize: Size(12.0, 12.0),
-                            // activeColor: Color(0xFFFFF305),
-                            // activeColor: Colors.blue,
-                            activeColor: Colors.black,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
+      ),
+      child: UpgradeAlert(
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        child: GlobalVar.isLoading == true
+            ? const Center(child: CircleLoading())
+            : Scaffold(
+                appBar: AppBar(
+                  // backgroundColor: const Color(0xFFFE0000),
+                  title: Text(
+                    GlobalVar.listUserData.isNotEmpty
+                        ? 'Welcome, ${GlobalVar.listUserData[0].memberName}'
+                        : 'Welcome, Bikers!',
+                    style: GlobalFont.middlegigafontR,
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.025,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  automaticallyImplyLeading: false,
+                  centerTitle: true,
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        // 'Special Offer',
-                        'Billboard',
-                        style: GlobalFont.giantfontM,
+                      (GlobalVar.controllerListLink.isNotEmpty)
+                          ? InkWell(
+                              onTap: () {
+                                launchUrl(
+                                  Uri.parse(
+                                    'https://www.instagram.com/fixupmotoidn_official/',
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.375,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.925,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width * 0.015,
+                                  vertical: MediaQuery.of(context).size.height *
+                                      0.015,
+                                ),
+                                decoration: BoxDecoration(
+                                    color: const Color(0xFFFE0000),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    CarouselSlider(
+                                      items: [
+                                        for (int i = 0;
+                                            i <
+                                                GlobalVar
+                                                    .controllerListLink.length;
+                                            i++)
+                                          (GlobalVar.controllerListType[i] ==
+                                                  'video')
+                                              ? Chewie(
+                                                  controller: GlobalVar
+                                                      .controllerListLink[i],
+                                                )
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      20.0,
+                                                    ),
+                                                    image: DecorationImage(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                        GlobalVar
+                                                            .controllerListLink[i],
+                                                        maxHeight: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.35)
+                                                            .round()
+                                                            .toInt(),
+                                                      ),
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                ),
+                                      ],
+                                      options: CarouselOptions(
+                                        aspectRatio: 1,
+                                        viewportFraction: 1.0,
+                                        autoPlay: true,
+                                        onPageChanged: (index, reason) {
+                                          setState(
+                                              () => _currentContent = index);
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.05,
+                                      top: MediaQuery.of(context).size.height *
+                                          0.3,
+                                      child: DotsIndicator(
+                                        dotsCount:
+                                            GlobalVar.controllerListLink.length,
+                                        position: _currentContent,
+                                        decorator: const DotsDecorator(
+                                          size: Size(8.0, 8.0),
+                                          activeSize: Size(12.0, 12.0),
+                                          activeColor: Colors.yellow,
+                                          // activeColor: Colors.blue,
+                                          color: Colors.orange,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.visibility_off_rounded,
+                                    size: 40.0,
+                                  ),
+                                  Text(
+                                    'Unavailable',
+                                    style: GlobalFont.bigfontM,
+                                  ),
+                                ],
+                              ),
+                            ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.06,
+                          vertical: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        child: Text(
+                          "Bikes",
+                          style: GlobalFont.giantfontR,
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height * 0.39,
+                        margin: EdgeInsets.only(
+                          right: MediaQuery.of(context).size.width * 0.05,
+                          left: MediaQuery.of(context).size.width * 0.05,
+                          bottom: MediaQuery.of(context).size.height * 0.0335,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        decoration: BoxDecoration(
+                          // color: Color(0xFFF59842),
+                          // color: Color(0xFF99CCFF),
+                          // color: const Color(0xFFFE0000),
+                          color: Colors.grey[350],
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              for (int i = 0;
+                                  i < GlobalVar.listVehicle.length;
+                                  i++)
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ServiceHistory(i),
+                                      ),
+                                    );
+                                    setState(() => GlobalVar.listVehicle);
+                                  },
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.115,
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.025,
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              0.005,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.05,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFE0000),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            width: 50,
+                                            height: 45,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
+                                            ),
+                                            child: Text(
+                                              '${i + 1}',
+                                              style: GlobalFont.gigafontRWhite,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 4,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.025,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    (GlobalVar.listVehicle[i]
+                                                                .color ==
+                                                            '-')
+                                                        ? Expanded(
+                                                            flex: 4,
+                                                            child: Text(
+                                                              'FIXUP MOTO',
+                                                              style: GlobalFont
+                                                                  .middlegiantfontM,
+                                                            ),
+                                                          )
+                                                        : Expanded(
+                                                            flex: 4,
+                                                            child: Text(
+                                                              GlobalVar
+                                                                  .listVehicle[
+                                                                      i]
+                                                                  .unitID,
+                                                              style: GlobalFont
+                                                                  .middlegiantfontM,
+                                                            ),
+                                                          ),
+                                                    Expanded(
+                                                      child: IconButton(
+                                                        onPressed: () =>
+                                                            editVehicle(2,
+                                                                index: i),
+                                                        icon: const Icon(
+                                                          Icons.edit,
+                                                          size: 23.0,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: (GlobalVar
+                                                              .listVehicle[i]
+                                                              .color ==
+                                                          '-')
+                                                      ? Text(
+                                                          GlobalVar
+                                                              .listVehicle[i]
+                                                              .plateNumber,
+                                                          style: GlobalFont
+                                                              .middlegiantfontM,
+                                                        )
+                                                      : Text(
+                                                          '${GlobalVar.listVehicle[i].color} - ${GlobalVar.listVehicle[i].plateNumber}',
+                                                          style: GlobalFont
+                                                              .middlegiantfontM,
+                                                        ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const Expanded(
+                                          child: Icon(
+                                            Icons.arrow_right_rounded,
+                                            size: 60.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              InkWell(
+                                onTap: () => editVehicle(1),
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.115,
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.025,
+                                    vertical:
+                                        MediaQuery.of(context).size.height *
+                                            0.005,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFE0000),
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Icon(
+                                        Icons.add_circle_outline_rounded,
+                                        size: 50,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Add your bike',
+                                          style: GlobalFont.middlegiantfontM,
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_right_rounded,
+                                        size: 60.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.01,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.025,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.05,
-                      right: MediaQuery.of(context).size.width * 0.05,
-                      bottom: MediaQuery.of(context).size.height * 0.025,
-                    ),
-                    child: (controllerList.isNotEmpty)
-                        ? Column(
-                            children: [
-                              CarouselSlider(
-                                items: [
-                                  for (int i = 0;
-                                      i < controllerList.length;
-                                      i++)
-                                    (controllerListType[i] == 'video')
-                                        ? AspectRatio(
-                                            aspectRatio: 16 / 9,
-                                            child: Chewie(
-                                              controller: controllerList[i],
-                                            ),
-                                          )
-                                        : Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.6,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.5,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                              image: DecorationImage(
-                                                image:
-                                                    CachedNetworkImageProvider(
-                                                  controllerList[i],
-                                                ),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                ],
-                                options: CarouselOptions(
-                                  viewportFraction: 1.0,
-                                  autoPlay: true,
-                                  onPageChanged: (index, reason) {
-                                    setState(() => _currentContent = index);
-                                  },
-                                  // onPageChanged: (index, reason) {
-                                  //   carouselNotifier.notify(
-                                  //       index, _currentContent);
-                                  //   if (reason !=
-                                  //       CarouselPageChangedReason.timed) {
-                                  //     // Don't update non-autoplay if triggered externally
-                                  //     carouselNotifier.notify(
-                                  //         index, _currentContent);
-                                  //     setState(() => _currentContent = index);
-                                  //   }
-                                  // },
-                                ),
-                              ),
-                              DotsIndicator(
-                                dotsCount: controllerList.length,
-                                position: _currentContent,
-                                decorator: const DotsDecorator(
-                                  size: Size(8.0, 8.0),
-                                  activeSize: Size(12.0, 12.0),
-                                  activeColor: Colors.red,
-                                  // activeColor: Colors.blue,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                            ],
-                          )
-                        : SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.visibility_off_rounded,
-                                  size: 40.0,
-                                ),
-                                Text(
-                                  'Unavailable',
-                                  style: GlobalFont.bigfontM,
-                                ),
-                              ],
-                            ),
-                          ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 }

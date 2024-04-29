@@ -115,6 +115,7 @@ class _PopUpVisibilityState extends State<PopUpVisibility> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
+                        flex: 2,
                         child: Text(
                           widget.list.pointName,
                           style: const TextStyle(
@@ -123,8 +124,6 @@ class _PopUpVisibilityState extends State<PopUpVisibility> {
                           ),
                         ),
                       ),
-                      // Add space between texts
-                      const SizedBox(height: 5.0),
                       Expanded(
                         child: Text(
                           '${widget.list.pointQty.toString()} points',

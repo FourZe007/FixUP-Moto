@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -15,14 +16,20 @@ class Workshop extends StatefulWidget {
 }
 
 class _WorkshopState extends State<Workshop> {
+  void loadingTrigger() {
+    setState(() {
+      GlobalVar.isLoading = !GlobalVar.isLoading;
+    });
+  }
+
   void getWorkshops() async {
-    setState(() => GlobalVar.isLoading = true);
+    loadingTrigger();
     GlobalVar.listWorkshopDetail = await GlobalAPI.fetchGetWorkshop(
       'BRANCHSHOP',
     );
     GlobalVar.latitudeList = [-7.330453856628143, -7.263224495143975];
     GlobalVar.longitutdeList = [112.74886179025017, 112.68171265415458];
-    setState(() => GlobalVar.isLoading = false);
+    loadingTrigger();
   }
 
   @override
@@ -177,24 +184,32 @@ class _WorkshopState extends State<Workshop> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                                CrossAxisAlignment
-                                                    .start, // Align vertically
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                GlobalVar
-                                                    .listWorkshopDetail[i].name,
-                                                style: const TextStyle(
-                                                  fontSize: 18.0,
-                                                  fontWeight: FontWeight.bold,
+                                              Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    GlobalVar
+                                                        .listWorkshopDetail[i]
+                                                        .name,
+                                                    style: const TextStyle(
+                                                      fontSize: 18.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                              // Add space between texts
-                                              const SizedBox(height: 5.0),
-                                              Text(
-                                                GlobalVar.listWorkshopDetail[i]
-                                                    .address,
-                                                style: const TextStyle(
-                                                    fontSize: 12.5),
+                                              Expanded(
+                                                child: Text(
+                                                  GlobalVar
+                                                      .listWorkshopDetail[i]
+                                                      .address,
+                                                  style: const TextStyle(
+                                                      fontSize: 12.5),
+                                                ),
                                               ),
                                             ],
                                           ),

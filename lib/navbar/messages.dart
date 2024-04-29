@@ -110,9 +110,15 @@ class _MessagesState extends State<Messages> {
     );
   }
 
+  void loadingTrigger() {
+    setState(() {
+      GlobalVar.isLoading = !GlobalVar.isLoading;
+    });
+  }
+
   void getNotification() async {
     GlobalVar.listNotificationDetail = [];
-    setState(() => GlobalVar.isLoading = true);
+    loadingTrigger();
     GlobalVar.listNotificationDetail =
         await GlobalAPI.fetchGetNotification('1', '0');
     // GlobalVar.notificationDetailLength = 0;
@@ -125,7 +131,7 @@ class _MessagesState extends State<Messages> {
     // }
 
     setIcon();
-    setState(() => GlobalVar.isLoading = false);
+    loadingTrigger();
 
     // print('Message Notif Length: ${GlobalVar.notifLength}');
 

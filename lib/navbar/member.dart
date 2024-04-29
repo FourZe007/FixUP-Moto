@@ -20,8 +20,14 @@ class Member extends StatefulWidget {
 class _MemberState extends State<Member> {
   int validVoucher = 0;
 
+  void loadingTrigger() {
+    setState(() {
+      GlobalVar.isLoading = !GlobalVar.isLoading;
+    });
+  }
+
   void getVoucher() async {
-    setState(() => GlobalVar.isLoading = true);
+    loadingTrigger();
     GlobalVar.listGetVoucher = await GlobalAPI.fetchGetVoucher('POINTID');
 
     int validVoucher = 0;
@@ -32,7 +38,7 @@ class _MemberState extends State<Member> {
       }
     }
     print('Valid Voucher: $validVoucher');
-    setState(() => GlobalVar.isLoading = false);
+    loadingTrigger();
   }
 
   @override

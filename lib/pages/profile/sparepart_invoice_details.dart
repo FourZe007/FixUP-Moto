@@ -181,90 +181,90 @@ class _SparepartInvoiceDetailsState extends State<SparepartInvoiceDetails> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        'Biaya Service',
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Rp.',
-                        textAlign: TextAlign.right,
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        NumberFormat('###,###.##')
-                            .format(GlobalVar
-                                .memberInvoiceList[widget.index].priceNett)
-                            .toString(),
-                        textAlign: TextAlign.right,
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: SizedBox(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.01,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        'Biaya Spare Part',
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: SizedBox(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Rp.',
-                        textAlign: TextAlign.right,
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        NumberFormat('###,###.##')
-                            .format(GlobalVar
-                                .memberInvoiceList[widget.index].discNett)
-                            .toString(),
-                        textAlign: TextAlign.right,
-                        style: GlobalFont.bigfontRNormal,
-                      ),
-                    ),
-                    const Expanded(
-                      flex: 1,
-                      child: SizedBox(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.01,
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       flex: 3,
+                //       child: Text(
+                //         'Biaya Service',
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     const Expanded(
+                //       flex: 1,
+                //       child: SizedBox(),
+                //     ),
+                //     Expanded(
+                //       flex: 1,
+                //       child: Text(
+                //         'Rp.',
+                //         textAlign: TextAlign.right,
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     Expanded(
+                //       flex: 2,
+                //       child: Text(
+                //         NumberFormat('###,###.##')
+                //             .format(GlobalVar
+                //                 .memberInvoiceList[widget.index].priceNett)
+                //             .toString(),
+                //         textAlign: TextAlign.right,
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     const Expanded(
+                //       flex: 1,
+                //       child: SizedBox(),
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.01,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Expanded(
+                //       flex: 3,
+                //       child: Text(
+                //         'Biaya Spare Part',
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     const Expanded(
+                //       flex: 1,
+                //       child: SizedBox(),
+                //     ),
+                //     Expanded(
+                //       flex: 1,
+                //       child: Text(
+                //         'Rp.',
+                //         textAlign: TextAlign.right,
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     Expanded(
+                //       flex: 2,
+                //       child: Text(
+                //         NumberFormat('###,###.##')
+                //             .format(GlobalVar
+                //                 .memberInvoiceList[widget.index].discNett)
+                //             .toString(),
+                //         textAlign: TextAlign.right,
+                //         style: GlobalFont.bigfontRNormal,
+                //       ),
+                //     ),
+                //     const Expanded(
+                //       flex: 1,
+                //       child: SizedBox(),
+                //     ),
+                //   ],
+                // ),
+                // SizedBox(
+                //   height: MediaQuery.of(context).size.height * 0.01,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

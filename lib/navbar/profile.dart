@@ -20,7 +20,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  bool isLoading = false;
+  // bool isLoading = false;
   bool returnResult = false;
 
   List<ModelResultMessage> listDeleteToken = [];
@@ -43,11 +43,17 @@ class _ProfileState extends State<Profile> {
   //   Navigator.pushReplacementNamed(context, '/login');
   // }
 
+  void loadingTrigger() {
+    setState(() {
+      GlobalVar.isLoading = !GlobalVar.isLoading;
+    });
+  }
+
   void getMemberInvoice() async {
-    setState(() => isLoading = true);
+    loadingTrigger();
     GlobalVar.memberInvoiceList =
         await GlobalAPI.fetchGetMemberInvoice('', '', '');
-    setState(() => isLoading = false);
+    loadingTrigger();
 
     GlobalVar.memberInvoiceService = [];
     GlobalVar.memberInvoiceSparePart = [];
@@ -69,7 +75,7 @@ class _ProfileState extends State<Profile> {
     );
 
     if (returnResult == true) {
-      setState(() => GlobalVar.isLoading = true);
+      loadingTrigger();
       GlobalVar.listUserData = await GlobalAPI.getUserData(
         'MEMBERSHIP',
         GlobalUser.id!,
@@ -78,7 +84,7 @@ class _ProfileState extends State<Profile> {
         '',
         '',
       );
-      setState(() => GlobalVar.isLoading = false);
+      loadingTrigger();
     }
   }
 

@@ -441,6 +441,43 @@ class GlobalAPI {
     }
   }
 
+  static Future<ModelAccessToken> fetchGetNewAccessToken(
+    String accessToken,
+  ) async {
+    var params = {
+      'grant_type': 'ig_refresh_token',
+      'access_token': accessToken,
+    };
+
+    var url = Uri.https('graph.instagram.com', '/refresh_access_token', params);
+
+    print('Get New Access Token URL: $url');
+    // ModelAccessToken list = [];
+
+    try {
+      final response = await http.get(url).timeout(const Duration(seconds: 60));
+
+      print(response.body);
+
+      if (response.statusCode <= 200) {
+        var jsonGetFeedsType = jsonDecode(response.body);
+        print('jsonGetFeeds Result: $jsonGetFeedsType');
+        if (jsonGetFeedsType != null) {
+          return ModelAccessToken.fromJson(jsonGetFeedsType);
+        } else {
+          // print('List Result: $list');
+
+          return ModelAccessToken(accessToken: '', bearer: '', duration: 0);
+        }
+      }
+
+      return ModelAccessToken(accessToken: '', bearer: '', duration: 0);
+    } catch (e) {
+      print('Error: ${e.toString()}');
+      return ModelAccessToken(accessToken: '', bearer: '', duration: 0);
+    }
+  }
+
   static Future<List<ModelFeedsData>> fetchGetFeeds(
     String accessToken,
   ) async {

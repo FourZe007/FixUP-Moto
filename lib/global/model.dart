@@ -142,6 +142,24 @@ class ModelSendOTP {
   }
 }
 
+class ModelUserCheck {
+  List<ModelNotificationDetail> notification;
+  String deviceName;
+  List<ModelBrowseUser> userData;
+  List<ModelVehicleDetail> vehicleDetail;
+  List<dynamic> controllerLink;
+  List<dynamic> controllerType;
+
+  ModelUserCheck({
+    required this.notification,
+    required this.deviceName,
+    required this.userData,
+    required this.vehicleDetail,
+    required this.controllerLink,
+    required this.controllerType,
+  });
+}
+
 class ModelVehicleDetail {
   String unitID;
   String plateNumber;
@@ -325,6 +343,26 @@ class ModelFeedsData {
       mediaurl: json['media_url'],
       username: json['username'],
       timestamp: json['timestamp'],
+    );
+  }
+}
+
+class ModelAccessToken {
+  String accessToken;
+  String bearer;
+  int duration;
+
+  ModelAccessToken({
+    required this.accessToken,
+    required this.bearer,
+    required this.duration,
+  });
+
+  factory ModelAccessToken.fromJson(Map<String, dynamic> json) {
+    return ModelAccessToken(
+      accessToken: json['access_token'],
+      bearer: json['token_type'],
+      duration: json['expires_in'],
     );
   }
 }
