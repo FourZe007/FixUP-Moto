@@ -146,7 +146,7 @@ class _MemberState extends State<Member> {
                     height: MediaQuery.of(context).size.height * 0.25,
                     decoration: BoxDecoration(
                       image: const DecorationImage(
-                        image: AssetImage('./assets/fix-up-moto.jpg'),
+                        image: AssetImage('./assets/card.jpg'),
                         fit: BoxFit.fill,
                       ),
                       borderRadius: BorderRadius.circular(10.0),
