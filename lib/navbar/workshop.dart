@@ -6,6 +6,7 @@ import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/dealer/workshop_details.dart';
+import 'package:flutter/widgets.dart';
 import 'package:upgrader/upgrader.dart';
 
 class Workshop extends StatefulWidget {
@@ -157,61 +158,82 @@ class _WorkshopState extends State<Workshop> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.stretch,
                                       children: [
-                                        Container(
-                                          height: 75,
-                                          width: 100,
-                                          padding: const EdgeInsets.only(
-                                              right: 10.0),
-                                          decoration: const BoxDecoration(
-                                            // color: Color(0xFFF59842),
-                                            // color: Color(0xFF99CCFF),
-                                            color: Color(0xFFFE0000),
-                                          ),
-                                          child: const Image(
-                                            image: AssetImage(
-                                              './assets/dealer-default.png',
+                                        Expanded(
+                                          child: Container(
+                                            height: 75,
+                                            width: 100,
+                                            padding: const EdgeInsets.only(
+                                                right: 10.0),
+                                            decoration: const BoxDecoration(
+                                              // color: Color(0xFFF59842),
+                                              // color: Color(0xFF99CCFF),
+                                              color: Color(0xFFFE0000),
+                                            ),
+                                            child: const Image(
+                                              image: AssetImage(
+                                                './assets/dealer-default.png',
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.03,
-                                        ),
+                                        // const Expanded(
+                                        //   child: SizedBox(
+                                        //       // width: MediaQuery.of(context)
+                                        //       //         .size
+                                        //       //         .width *
+                                        //       //     0.03,
+                                        //       ),
+                                        // ),
                                         Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    GlobalVar
-                                                        .listWorkshopDetail[i]
-                                                        .name,
-                                                    style: const TextStyle(
-                                                      fontSize: 18.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                          flex: 2,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.015,
+                                              vertical: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.005,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      GlobalVar
+                                                          .listWorkshopDetail[i]
+                                                          .name,
+                                                      style: const TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  GlobalVar
-                                                      .listWorkshopDetail[i]
-                                                      .address,
-                                                  style: const TextStyle(
-                                                      fontSize: 12.5),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      GlobalVar
+                                                          .listWorkshopDetail[i]
+                                                          .address,
+                                                      style: const TextStyle(
+                                                        fontSize: 12.5,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         const Icon(
