@@ -259,13 +259,11 @@ class _ServiceInvoiceState extends State<ServiceInvoice> {
                               );
                             },
                             child: Container(
-                              margin: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.025,
-                                right:
-                                    MediaQuery.of(context).size.width * 0.025,
-                                top: MediaQuery.of(context).size.width * 0.01,
-                                bottom:
-                                    MediaQuery.of(context).size.width * 0.01,
+                              margin: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.02,
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.005,
                               ),
                               decoration: BoxDecoration(
                                 borderRadius: const BorderRadius.all(
@@ -283,7 +281,7 @@ class _ServiceInvoiceState extends State<ServiceInvoice> {
                                 children: [
                                   Container(
                                     height: MediaQuery.of(context).size.height *
-                                        0.15,
+                                        0.125,
                                     width: MediaQuery.of(context).size.width *
                                         0.15,
                                     decoration: const BoxDecoration(

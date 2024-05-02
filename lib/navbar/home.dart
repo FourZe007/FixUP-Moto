@@ -363,12 +363,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       child: UpgradeAlert(
-        showIgnore: false,
-        showLater: false,
         dialogStyle: UpgradeDialogStyle.cupertino,
-        // upgrader: Upgrader(
-        //   debugDisplayAlways: true,
-        // ),
         child: GlobalVar.isLoading == true
             ? const Center(child: CircleLoading())
             : Scaffold(
@@ -376,12 +371,13 @@ class _HomeState extends State<Home> {
                   // backgroundColor: const Color(0xFFFE0000),
                   title: Text(
                     GlobalVar.listUserData.isNotEmpty
-                        ? 'Welcome, ${GlobalVar.listUserData[0].memberName}'
-                        : 'Welcome, Bikers!',
-                    style: GlobalFont.middlegigafontR,
+                        ? 'Hi, ${GlobalVar.listUserData[0].memberName}'
+                        : 'Hi, Bikers!',
+                    style: GlobalFont.middlegiantfontR,
                   ),
                   automaticallyImplyLeading: false,
-                  centerTitle: true,
+                  centerTitle: false,
+                  // toolbarHeight: 0.0,
                 ),
                 body: SingleChildScrollView(
                   child: Column(
@@ -398,7 +394,7 @@ class _HomeState extends State<Home> {
                               },
                               child: Container(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.4,
+                                    MediaQuery.of(context).size.height * 0.375,
                                 width:
                                     MediaQuery.of(context).size.width * 0.925,
                                 padding: EdgeInsets.symmetric(
@@ -410,63 +406,65 @@ class _HomeState extends State<Home> {
                                 decoration: BoxDecoration(
                                     color: const Color(0xFFFE0000),
                                     borderRadius: BorderRadius.circular(20.0)),
-                                child: Column(
+                                child: Stack(
+                                  alignment: Alignment.center,
                                   children: [
-                                    Expanded(
-                                      flex: 12,
-                                      child: CarouselSlider(
-                                        items: [
-                                          for (int i = 0;
-                                              i <
-                                                  GlobalVar.controllerListLink
-                                                      .length;
-                                              i++)
-                                            (GlobalVar.controllerListType[i] ==
-                                                    'video')
-                                                ? Chewie(
-                                                    controller: GlobalVar
-                                                        .controllerListLink[i],
-                                                  )
-                                                : Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        20.0,
+                                    CarouselSlider(
+                                      items: [
+                                        for (int i = 0;
+                                            i <
+                                                GlobalVar
+                                                    .controllerListLink.length;
+                                            i++)
+                                          (GlobalVar.controllerListType[i] ==
+                                                  'video')
+                                              ? Chewie(
+                                                  controller: GlobalVar
+                                                      .controllerListLink[i],
+                                                )
+                                              : Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      20.0,
+                                                    ),
+                                                    image: DecorationImage(
+                                                      image:
+                                                          CachedNetworkImageProvider(
+                                                        GlobalVar
+                                                            .controllerListLink[i],
+                                                        maxHeight: (MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.35)
+                                                            .round()
+                                                            .toInt(),
                                                       ),
-                                                      image: DecorationImage(
-                                                        image:
-                                                            CachedNetworkImageProvider(
-                                                          GlobalVar
-                                                              .controllerListLink[i],
-                                                          maxHeight: (MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.35)
-                                                              .round()
-                                                              .toInt(),
-                                                        ),
-                                                        fit: BoxFit.fill,
-                                                      ),
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
-                                        ],
-                                        options: CarouselOptions(
-                                          aspectRatio: 1,
-                                          viewportFraction: 1.0,
-                                          autoPlay: true,
-                                          onPageChanged: (index, reason) {
-                                            setState(
-                                                () => _currentContent = index);
-                                          },
-                                        ),
+                                                ),
+                                      ],
+                                      options: CarouselOptions(
+                                        aspectRatio: 1,
+                                        viewportFraction: 1.0,
+                                        autoPlay: true,
+                                        onPageChanged: (index, reason) {
+                                          setState(
+                                              () => _currentContent = index);
+                                        },
                                       ),
                                     ),
-                                    Expanded(
+                                    Positioned(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.05,
+                                      top: MediaQuery.of(context).size.height *
+                                          0.265,
                                       child: DotsIndicator(
                                         dotsCount:
                                             GlobalVar.controllerListLink.length,
@@ -474,9 +472,9 @@ class _HomeState extends State<Home> {
                                         decorator: const DotsDecorator(
                                           size: Size(8.0, 8.0),
                                           activeSize: Size(12.0, 12.0),
-                                          activeColor: Colors.black,
+                                          activeColor: Colors.yellow,
                                           // activeColor: Colors.blue,
-                                          color: Colors.white,
+                                          color: Colors.orange,
                                         ),
                                       ),
                                     ),
