@@ -510,7 +510,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 ),
               ),
               Text(
-                'Version 1.0.6',
+                'Version 1.0.5',
                 style: GlobalFont.middlebigfontM,
               ),
             ],

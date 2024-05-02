@@ -16,6 +16,7 @@ import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:upgrader/upgrader.dart';
 
 class SplashContent extends StatefulWidget {
   const SplashContent({super.key});
@@ -207,219 +208,232 @@ class _SplashContentState extends State<SplashContent> {
               currentFocus.unfocus();
             }
           },
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              // New
-              // Remove back button to make the UI/UX more clean
-              automaticallyImplyLeading: false,
-              // New
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: Container(
-              // color: Colors.white,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/login-background.png'),
-                  fit: BoxFit.cover,
-                ),
+          child: UpgradeAlert(
+            showIgnore: false,
+            showLater: false,
+            dialogStyle: UpgradeDialogStyle.cupertino,
+            // upgrader: Upgrader(
+            //   debugDisplayAlways: true,
+            // ),
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBodyBehindAppBar: true,
+              appBar: AppBar(
+                // New
+                // Remove back button to make the UI/UX more clean
+                automaticallyImplyLeading: false,
+                // New
+                backgroundColor: Colors.transparent,
+                elevation: 0,
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: (GlobalUser.isNew == true && GlobalUser.flag == 0)
-                          ? MediaQuery.of(context).size.height * 0.86
-                          : MediaQuery.of(context).size.height * 0.925,
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.125,
-                                ),
-                                child: LabelTitleStatic(
-                                  'LOGIN OR REGISTER',
-                                  GlobalFont.titleLoginFontW2,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left:
-                                      MediaQuery.of(context).size.width * 0.04,
-                                ),
-                                child: const Text(
-                                  'Enter your phone number to login or register',
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CustomUserInput(
-                                setPhone,
-                                phone,
-                                mode: 0,
-                                isPhone: true,
-                                prefixText: '+62',
-                                hint: 'nomor telepon',
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: (GlobalUser.isNew == true && GlobalUser.flag == 0)
-                          ? MediaQuery.of(context).size.height * 0.14
-                          : MediaQuery.of(context).size.height * 0.075,
-                      decoration: BoxDecoration(
-                        color:
+              body: Container(
+                // color: Colors.white,
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('./assets/login-background.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height:
                             (GlobalUser.isNew == true && GlobalUser.flag == 0)
-                                ? Colors.white70
-                                : Colors.transparent,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0),
+                                ? MediaQuery.of(context).size.height * 0.86
+                                : MediaQuery.of(context).size.height * 0.925,
+                        padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.05,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.125,
+                                  ),
+                                  child: LabelTitleStatic(
+                                    'LOGIN OR REGISTER',
+                                    GlobalFont.titleLoginFontW2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                  child: const Text(
+                                    'Enter your phone number to login or register',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.03,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomUserInput(
+                                  setPhone,
+                                  phone,
+                                  mode: 0,
+                                  isPhone: true,
+                                  prefixText: '+62',
+                                  hint: 'nomor telepon',
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.01,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // New
-                          // before using (GlobalUser.isNew == true && GlobalUser.flag == 0) statement
-                          (GlobalUser.isNew == true)
-                              ? Container(
-                                  alignment: Alignment.bottomCenter,
-                                  margin: EdgeInsets.symmetric(
-                                    vertical:
-                                        MediaQuery.of(context).size.height *
-                                            0.01,
-                                    horizontal:
-                                        MediaQuery.of(context).size.width *
-                                            0.01,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Checkbox(
-                                          checkColor: Colors.white,
-                                          fillColor:
-                                              MaterialStateProperty.resolveWith(
-                                                  (Set<MaterialState> states) {
-                                            // const Set<MaterialState>
-                                            //     interactiveStates =
-                                            //     <MaterialState>{
-                                            //   MaterialState.pressed,
-                                            //   MaterialState.hovered,
-                                            //   MaterialState.focused,
-                                            // };
-                                            // if (states.any(
-                                            //     interactiveStates.contains)) {
-                                            //   return Colors.blue;
-                                            // }
-                                            return Colors.black;
-                                          }),
-                                          value: isChecked,
-                                          onChanged: (bool? value) {
-                                            print('Before: $isChecked');
-                                            setState(() {
-                                              isChecked = !isChecked;
-                                            });
-                                            print('After: $isChecked');
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 5,
-                                        child: Text.rich(
-                                          TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'Saya menyetujui ',
-                                                style:
-                                                    GlobalFont.bigfontMNormal,
-                                              ),
-                                              TextSpan(
-                                                text: 'syarat dan ketentuan',
-                                                style: GlobalFont.bigfontMNormal
-                                                    .copyWith(
-                                                  color: Colors.blue[
-                                                      800], // Or any desired color
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                const TermsAndConditions(), // Replace with the actual page
-                                                          ),
-                                                        );
-                                                      },
-                                              ),
-                                              TextSpan(
-                                                text: ' aplikasi FixUP Moto',
-                                                style:
-                                                    GlobalFont.bigfontMNormal,
-                                              ),
-                                            ],
+                      Container(
+                        height:
+                            (GlobalUser.isNew == true && GlobalUser.flag == 0)
+                                ? MediaQuery.of(context).size.height * 0.14
+                                : MediaQuery.of(context).size.height * 0.075,
+                        decoration: BoxDecoration(
+                          color:
+                              (GlobalUser.isNew == true && GlobalUser.flag == 0)
+                                  ? Colors.white70
+                                  : Colors.transparent,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // New
+                            // before using (GlobalUser.isNew == true && GlobalUser.flag == 0) statement
+                            (GlobalUser.isNew == true)
+                                ? Container(
+                                    alignment: Alignment.bottomCenter,
+                                    margin: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              0.01,
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.01,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Checkbox(
+                                            checkColor: Colors.white,
+                                            fillColor: MaterialStateProperty
+                                                .resolveWith((Set<MaterialState>
+                                                    states) {
+                                              // const Set<MaterialState>
+                                              //     interactiveStates =
+                                              //     <MaterialState>{
+                                              //   MaterialState.pressed,
+                                              //   MaterialState.hovered,
+                                              //   MaterialState.focused,
+                                              // };
+                                              // if (states.any(
+                                              //     interactiveStates.contains)) {
+                                              //   return Colors.blue;
+                                              // }
+                                              return Colors.black;
+                                            }),
+                                            value: isChecked,
+                                            onChanged: (bool? value) {
+                                              print('Before: $isChecked');
+                                              setState(() {
+                                                isChecked = !isChecked;
+                                              });
+                                              print('After: $isChecked');
+                                            },
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox(height: 0.0),
-                          GlobalVar.isLoading
-                              ? const CircleLoading(warna: Colors.white)
-                              : isChecked == true || GlobalUser.isNew == false
-                                  ? Tombol(
-                                      'CONTINUE',
-                                      login,
-                                      lebar: MediaQuery.of(context).size.width *
-                                          0.95,
-                                    )
-                                  : Tombol(
-                                      'CONTINUE',
-                                      warn,
-                                      lebar: MediaQuery.of(context).size.width *
-                                          0.95,
-                                      disable: true,
+                                        Expanded(
+                                          flex: 5,
+                                          child: Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: 'Saya menyetujui ',
+                                                  style:
+                                                      GlobalFont.bigfontMNormal,
+                                                ),
+                                                TextSpan(
+                                                  text: 'syarat dan ketentuan',
+                                                  style: GlobalFont
+                                                      .bigfontMNormal
+                                                      .copyWith(
+                                                    color: Colors.blue[
+                                                        800], // Or any desired color
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                  ),
+                                                  recognizer:
+                                                      TapGestureRecognizer()
+                                                        ..onTap = () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const TermsAndConditions(), // Replace with the actual page
+                                                            ),
+                                                          );
+                                                        },
+                                                ),
+                                                TextSpan(
+                                                  text: ' aplikasi FixUP Moto',
+                                                  style:
+                                                      GlobalFont.bigfontMNormal,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                        ],
+                                  )
+                                : const SizedBox(height: 0.0),
+                            GlobalVar.isLoading
+                                ? const CircleLoading(warna: Colors.white)
+                                : isChecked == true || GlobalUser.isNew == false
+                                    ? Tombol(
+                                        'CONTINUE',
+                                        login,
+                                        lebar:
+                                            MediaQuery.of(context).size.width *
+                                                0.95,
+                                      )
+                                    : Tombol(
+                                        'CONTINUE',
+                                        warn,
+                                        lebar:
+                                            MediaQuery.of(context).size.width *
+                                                0.95,
+                                        disable: true,
+                                      ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

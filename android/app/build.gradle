@@ -67,9 +67,9 @@ android {
             // keyPassword keystoreProperties['keyPassword']
             // storeFile keystoreProperties['storeFile']
             // storePassword keystoreProperties['storePassword']
-            storeFile file('C:/Users/Joseph Angelus/upload-keystore.jks')
+            storeFile file('C:/Users/Joseph Angelus/Documents/@NEW Keystore - IMPORTANT!!/FixUP Moto/my-keystore.jks')
             storePassword 'josephangelus'
-            keyAlias = 'upload'
+            keyAlias = 'fourze'
             keyPassword 'josephangelus'
         }
     }

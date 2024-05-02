@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // temporary source code - My own source code
     // GlobalFunction.getAppVersion().then((appVer) async {
     //   print('Splash Screen - App Version: ${GlobalVar.appVersion}');
-
+    //
     //   if (GlobalVar.currentAppVersion == '') {
     //     GlobalVar.currentAppVersion = appVer;
     //     print(
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //   // print(
     //   //     'Splash Screen - Current App Version: ${GlobalVar.currentAppVersion}');
     // });
-
+    //
     // print('Splash Screen - App Version: ${GlobalVar.appVersion}');
     // print(
     //     'Splash Screen - Current App Version: ${GlobalVar.currentAppVersion}');

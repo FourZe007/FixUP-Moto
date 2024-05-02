@@ -363,7 +363,12 @@ class _HomeState extends State<Home> {
         ),
       ),
       child: UpgradeAlert(
+        showIgnore: false,
+        showLater: false,
         dialogStyle: UpgradeDialogStyle.cupertino,
+        // upgrader: Upgrader(
+        //   debugDisplayAlways: true,
+        // ),
         child: GlobalVar.isLoading == true
             ? const Center(child: CircleLoading())
             : Scaffold(
