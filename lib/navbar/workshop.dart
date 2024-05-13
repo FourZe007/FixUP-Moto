@@ -1,10 +1,13 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:fixupmoto/widget/popupdialog/kotakpesan.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/dealer/workshop_details.dart';
+import 'package:flutter/widgets.dart';
 
 class Workshop extends StatefulWidget {
   const Workshop({super.key});
@@ -25,9 +28,36 @@ class _WorkshopState extends State<Workshop> {
     GlobalVar.listWorkshopDetail = await GlobalAPI.fetchGetWorkshop(
       'BRANCHSHOP',
     );
-    GlobalVar.latitudeList = [-7.330453856628143, -7.263224495143975];
-    GlobalVar.longitutdeList = [112.74886179025017, 112.68171265415458];
+    // GlobalVar.latitudeList = [-7.330453856628143, -7.263224495143975];
+    // GlobalVar.longitutdeList = [112.74886179025017, 112.68171265415458];
     loadingTrigger();
+  }
+
+  void workshopDetails(int index, bool status) {
+    if (status == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkshopDetails(
+            GlobalVar.listWorkshopDetail[index].name,
+            GlobalVar.listWorkshopDetail[index].address,
+            GlobalVar.listWorkshopDetail[index].operation,
+            GlobalVar.listWorkshopDetail[index].phone,
+            index,
+          ),
+        ),
+      );
+    } else {
+      GlobalFunction.tampilkanDialog(
+        context,
+        false,
+        KotakPesan(
+          'WARNING!',
+          'Coming Soon',
+          tinggi: MediaQuery.of(context).size.height * 0.175,
+        ),
+      );
+    }
   }
 
   @override
@@ -104,30 +134,20 @@ class _WorkshopState extends State<Workshop> {
                       ? Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.015,
                             ),
                             for (int i = 0;
                                 i < GlobalVar.listWorkshopDetail.length;
                                 i++)
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => WorkshopDetails(
-                                        GlobalVar.listWorkshopDetail[i].name,
-                                        GlobalVar.listWorkshopDetail[i].address,
-                                        GlobalVar
-                                            .listWorkshopDetail[i].operation,
-                                        GlobalVar.listWorkshopDetail[i].phone,
-                                        i,
-                                      ),
-                                    ),
-                                  );
-                                },
+                              InkWell(
+                                onTap: () => workshopDetails(
+                                  i,
+                                  GlobalVar.listWorkshopDetail[i].isOpen,
+                                ),
                                 child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.1325,
                                   margin: EdgeInsets.only(
                                     left: MediaQuery.of(context).size.width *
                                         0.025,
@@ -139,6 +159,11 @@ class _WorkshopState extends State<Workshop> {
                                         0.0125,
                                   ),
                                   decoration: BoxDecoration(
+                                    color: (GlobalVar
+                                                .listWorkshopDetail[i].isOpen ==
+                                            true)
+                                        ? Colors.transparent
+                                        : Colors.grey[350],
                                     borderRadius: const BorderRadius.all(
                                       Radius.circular(10.0),
                                     ),
@@ -154,89 +179,75 @@ class _WorkshopState extends State<Workshop> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      Expanded(
-                                        child: Container(
-                                          height: 75,
-                                          width: 100,
-                                          padding: const EdgeInsets.only(
-                                              right: 10.0),
-                                          decoration: const BoxDecoration(
-                                            // color: Color(0xFFF59842),
-                                            // color: Color(0xFF99CCFF),
-                                            color: Color(0xFFFE0000),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.0125,
+                                          vertical: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.01,
+                                        ),
+                                        alignment: Alignment.center,
+                                        decoration: const BoxDecoration(
+                                          // color: Color(0xFFF59842),
+                                          // color: Color(0xFF99CCFF),
+                                          color: Color(0xFFFE0000),
+                                        ),
+                                        child: Image(
+                                          image: const AssetImage(
+                                            './assets/dealer-default-2.png',
                                           ),
-                                          child: const Image(
-                                            image: AssetImage(
-                                              './assets/dealer-default.png',
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.225,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.02,
+                                      ),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.bottomLeft,
+                                              child: Text(
+                                                GlobalVar
+                                                    .listWorkshopDetail[i].name,
+                                                style: const TextStyle(
+                                                  fontSize: 17.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      // const Expanded(
-                                      //   child: SizedBox(
-                                      //       // width: MediaQuery.of(context)
-                                      //       //         .size
-                                      //       //         .width *
-                                      //       //     0.03,
-                                      //       ),
-                                      // ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.015,
-                                            vertical: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.005,
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    GlobalVar
-                                                        .listWorkshopDetail[i]
-                                                        .name,
-                                                    style: const TextStyle(
-                                                      fontSize: 18.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                GlobalVar.listWorkshopDetail[i]
+                                                    .address,
+                                                style: const TextStyle(
+                                                  fontSize: 12.5,
                                                 ),
                                               ),
-                                              Expanded(
-                                                flex: 2,
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    GlobalVar
-                                                        .listWorkshopDetail[i]
-                                                        .address,
-                                                    style: const TextStyle(
-                                                      fontSize: 12.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        // color: Color(0xFFF59842),
-                                        // color: Color(0xFF99CCFF),
-                                        color: Color(0xFFFE0000),
+                                      const Expanded(
+                                        child: Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          // color: Color(0xFFF59842),
+                                          // color: Color(0xFF99CCFF),
+                                          color: Color(0xFFFE0000),
+                                        ),
                                       ),
                                     ],
                                   ),

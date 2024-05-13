@@ -5,10 +5,11 @@ import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/label_static.dart';
 
 class KotakPesan extends StatelessWidget {
-  const KotakPesan(this.header, this.detail, {super.key});
+  const KotakPesan(this.header, this.detail, {this.tinggi = 0.0, super.key});
 
   final String header;
   final String detail;
+  final double tinggi;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,8 @@ class KotakPesan extends StatelessWidget {
 
     return SizedBox(
       width: 300,
-      height: MediaQuery.of(context).size.height / 4,
+      height:
+          (tinggi == 0.0) ? MediaQuery.of(context).size.height * 0.25 : tinggi,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

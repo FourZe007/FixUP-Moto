@@ -500,6 +500,8 @@ class ModelWorkshopDetail {
   String operation;
   String phone;
   bool isOpen;
+  double latitude;
+  double longitude;
 
   ModelWorkshopDetail({
     required this.branch,
@@ -509,6 +511,8 @@ class ModelWorkshopDetail {
     required this.operation,
     required this.phone,
     required this.isOpen,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory ModelWorkshopDetail.fromJson(Map<String, dynamic> json) {
@@ -520,6 +524,8 @@ class ModelWorkshopDetail {
       operation: json['OperasionalHours'],
       phone: json['PhoneNo'],
       isOpen: json['Active'],
+      latitude: json['Lat'],
+      longitude: json['Lng'],
     );
   }
 }
