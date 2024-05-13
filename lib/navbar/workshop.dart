@@ -39,10 +39,6 @@ class _WorkshopState extends State<Workshop> {
         context,
         MaterialPageRoute(
           builder: (context) => WorkshopDetails(
-            GlobalVar.listWorkshopDetail[index].name,
-            GlobalVar.listWorkshopDetail[index].address,
-            GlobalVar.listWorkshopDetail[index].operation,
-            GlobalVar.listWorkshopDetail[index].phone,
             index,
           ),
         ),

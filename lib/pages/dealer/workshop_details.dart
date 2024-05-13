@@ -9,14 +9,12 @@ import 'package:fixupmoto/widget/timer/timer.dart';
 
 // ignore: must_be_immutable
 class WorkshopDetails extends StatefulWidget {
-  WorkshopDetails(this.branchName, this.address, this.operationHour,
-      this.phoneNumber, this.index,
-      {super.key});
+  WorkshopDetails(this.index, {super.key});
 
-  String branchName;
-  String address;
-  String operationHour;
-  String phoneNumber;
+  // String branchName;
+  // String address;
+  // String operationHour;
+  // String phoneNumber;
   int index;
 
   @override
@@ -79,11 +77,20 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
 
     _checkAccess();
 
-    print(widget.operationHour.split('\n')[0].split('\t')[1].substring(2));
-    print(widget.operationHour.split('\n')[1].split('\t')[3].substring(2));
-    weekday = widget.operationHour.split('\n')[0].split('\t')[1].substring(2);
-    saturday = widget.operationHour.split('\n')[0].split('\t')[1].substring(2);
-    sunday = widget.operationHour.split('\n')[1].split('\t')[3].substring(2);
+    // print(GlobalVar.listWorkshopDetail[widget.index].operation.split('\n')[0].split('\t')[1].substring(2));
+    // print(GlobalVar.listWorkshopDetail[widget.index].operation.split('\n')[1].split('\t')[3].substring(2));
+    weekday = GlobalVar.listWorkshopDetail[widget.index].operation
+        .split('\n')[0]
+        .split('\t')[1]
+        .substring(2);
+    saturday = GlobalVar.listWorkshopDetail[widget.index].operation
+        .split('\n')[0]
+        .split('\t')[1]
+        .substring(2);
+    sunday = GlobalVar.listWorkshopDetail[widget.index].operation
+        .split('\n')[1]
+        .split('\t')[3]
+        .substring(2);
   }
 
   @override
@@ -94,7 +101,7 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.branchName,
+            GlobalVar.listWorkshopDetail[widget.index].name,
             style: GlobalFont.giantfontM,
           ),
           // backgroundColor: const Color(0xFFF59842),
@@ -168,7 +175,8 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ServiceBooking(
-                                widget.branchName,
+                                GlobalVar
+                                    .listWorkshopDetail[widget.index].branch,
                               ),
                             ),
                           ),
@@ -328,7 +336,8 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  widget.address,
+                                  GlobalVar
+                                      .listWorkshopDetail[widget.index].address,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     color: Colors.black,
@@ -383,13 +392,21 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
                                 children: [
                                   const SizedBox(height: 8.0),
                                   Text(
-                                    widget.phoneNumber != ''
-                                        ? widget.phoneNumber
+                                    GlobalVar.listWorkshopDetail[widget.index]
+                                                .phone !=
+                                            ''
+                                        ? GlobalVar
+                                            .listWorkshopDetail[widget.index]
+                                            .phone
                                         : 'Unavailable',
                                     style: TextStyle(
                                       fontSize: 15.0,
                                       decoration: TextDecoration.underline,
-                                      color: widget.phoneNumber != ''
+                                      color: GlobalVar
+                                                  .listWorkshopDetail[
+                                                      widget.index]
+                                                  .phone !=
+                                              ''
                                           ? Colors.blue
                                           : Colors.grey,
                                     ),
@@ -430,8 +447,12 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => WorkshopMaps(
-                                        widget.index,
-                                        widget.index,
+                                        GlobalVar
+                                            .listWorkshopDetail[widget.index]
+                                            .latitude,
+                                        GlobalVar
+                                            .listWorkshopDetail[widget.index]
+                                            .longitude,
                                       ),
                                     ),
                                   );
