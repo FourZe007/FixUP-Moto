@@ -175,8 +175,7 @@ class _WorkshopDetailsState extends State<WorkshopDetails> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ServiceBooking(
-                                GlobalVar
-                                    .listWorkshopDetail[widget.index].branch,
+                                GlobalVar.listWorkshopDetail[widget.index].name,
                               ),
                             ),
                           ),

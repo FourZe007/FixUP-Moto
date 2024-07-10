@@ -34,6 +34,8 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
   ModelSendOTP mapSendOTP = ModelSendOTP(resultMessage: '');
 
+  List<ModelWorkshopDetail> workshopDetailList = [];
+
   void setDate(String value) {
     date = value;
   }
@@ -55,73 +57,143 @@ class _ServiceBookingState extends State<ServiceBooking> {
     complaint = value;
   }
 
-  void submitBook(BuildContext context) async {
-    modelName = vehicle.split(' - ')[0];
-    plateNumber = vehicle.split(' - ')[1];
-    // print('Cabang - ${widget.dealerName}');
-    // print('Nama Member: ${GlobalVar.listUserData[0].memberName}');
-    // print('Telepon Member: ${GlobalVar.listUserData[0].phoneNumber}');
-    // print('Tanggal: $date');
-    // print('Model Kendaraan: $modelName');
-    // print('Pukul: $pukul');
-    // print('Plat Nomor: $plateNumber');
-    // print('Komplain: $complaint');
+  void makeReservation(
+    BuildContext context,
+    ModelWorkshopDetail detail,
+  ) async {
+    if (vehicle != '') {
+      modelName = vehicle.split(' - ')[0];
+      plateNumber = vehicle.split(' - ')[1];
 
-    GlobalVar.listReqBook = await GlobalAPI.fetchInsertBookReq(
-      '1',
-      '',
-      date,
-      pukul,
-      '31',
-      (widget.dealerName == 'FixUP MOTO - KUTISARI') ? '01' : '02',
-      GlobalVar.listUserData[0].memberName,
-      GlobalVar.listUserData[0].phoneNumber,
-      plateNumber,
-      modelName,
-      complaint,
-      '',
-      '',
-    );
+      // print('Date: $date');
+      // print('Time: $pukul');
+      // print('Shop code: ${detail.shop}');
+      // print('Name: ${GlobalVar.listUserData[0].memberName}');
+      // print('Phone: ${GlobalVar.listUserData[0].phoneNumber}');
+      // print('Plate: $plateNumber');
+      // print('Model: $modelName');
+      // print('Complaint: $complaint');
 
-    // ignore: use_build_context_synchronously
-    Navigator.pop(context);
+      GlobalVar.listReqBook = await GlobalAPI.fetchInsertBookReq(
+        '1',
+        '',
+        date,
+        pukul,
+        '31',
+        detail.shop,
+        GlobalVar.listUserData[0].memberName,
+        GlobalVar.listUserData[0].phoneNumber,
+        plateNumber,
+        modelName,
+        complaint,
+        '',
+        '',
+      );
 
-    final snackBar = SnackBar(
-      /// need to set following properties for best effect of awesome_snackbar_content
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'Please keep your booking ID',
-        message: GlobalVar.listReqBook[0].resultMessage,
+      if (GlobalVar.listReqBook[0].resultMessage.length <= 16) {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
 
-        /// change contentType to ContentType.success,
-        /// ContentType.warning or ContentType.help for variants
-        contentType: ContentType.success,
-      ),
-    );
+        final snackBar = SnackBar(
+          /// need to set following properties for best effect of awesome_snackbar_content
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Please keep your booking ID',
+            message: GlobalVar.listReqBook[0].resultMessage,
 
-    // ignore: use_build_context_synchronously
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(snackBar);
+            /// change contentType to ContentType.success,
+            /// ContentType.warning or ContentType.help for variants
+            contentType: ContentType.success,
+          ),
+        );
 
-    String message =
-        '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage} adalah kode booking Anda. Demi Keamanan, jangan bagikan kode ini dan mohon disimpan.';
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
 
-    mapSendOTP = await GlobalAPI.fetchSendOTP(
-      '62${GlobalUser.phone}',
-      message,
-      'poco-phone',
-      // 'realme-tab',
-      'text',
-    );
+        String message =
+            '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage} adalah kode booking Anda. Demi Keamanan, jangan bagikan kode ini dan mohon disimpan.';
+
+        mapSendOTP = await GlobalAPI.fetchSendOTP(
+          '62${GlobalUser.phone}',
+          message,
+          'poco-phone',
+          // 'realme-tab',
+          'text',
+        );
+      } else {
+        // ignore: use_build_context_synchronously
+        Navigator.pop(context);
+
+        final snackBar = SnackBar(
+          /// need to set following properties for best effect of awesome_snackbar_content
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'FAILED!',
+            message: GlobalVar.listReqBook[0].resultMessage,
+
+            /// change contentType to ContentType.success,
+            /// ContentType.warning or ContentType.help for variants
+            contentType: ContentType.failure,
+          ),
+        );
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        String message =
+            '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage}.';
+
+        mapSendOTP = await GlobalAPI.fetchSendOTP(
+          '62${GlobalUser.phone}',
+          message,
+          'poco-phone',
+          // 'realme-tab',
+          'text',
+        );
+      }
+    } else {
+      final snackBar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'WARNING!',
+          message: 'Please check your input again',
+
+          /// change contentType to ContentType.success,
+          /// ContentType.warning or ContentType.help for variants
+          contentType: ContentType.warning,
+        ),
+      );
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
   }
 
-  Stream<List<Map<String, dynamic>>> setVehicle() async* {
+  Future<List> getBookingdata() async {
+    listVehicle.clear();
     listVehicle = await GlobalAPI.fetchSetVehicle();
-    print('List Vehicle: $listVehicle');
-    yield listVehicle;
+    // print('List Vehicle: $listVehicle');
+
+    workshopDetailList.clear();
+    workshopDetailList.addAll(
+      GlobalVar.listWorkshopDetail
+          .where((list) => list.name == widget.dealerName),
+    );
+
+    return [listVehicle, workshopDetailList];
   }
 
   @override
@@ -181,12 +253,16 @@ class _ServiceBookingState extends State<ServiceBooking> {
             //replace with our own icon data.
           ),
         ),
-        body: StreamBuilder(
-          stream: setVehicle(),
+        body: FutureBuilder(
+          future: getBookingdata(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircleLoading());
             } else if (snapshot.hasData) {
+              final List<Map<String, dynamic>> vehicleMap = snapshot.data![0];
+              final List<ModelWorkshopDetail> workshopDetail =
+                  snapshot.data![1];
+
               return SingleChildScrollView(
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.89,
@@ -211,7 +287,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                             ),
                             const SizedBox(height: 10.0),
                             Text(
-                              widget.dealerName,
+                              workshopDetail[0].name,
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
@@ -321,8 +397,8 @@ class _ServiceBookingState extends State<ServiceBooking> {
                             ),
                             const SizedBox(height: 5.0),
                             CustomDropDown(
-                              listData: snapshot.data!,
-                              inputan: snapshot.data![0]['value'],
+                              listData: vehicleMap,
+                              inputan: vehicleMap[0]['value'],
                               disable: (isEmpty) ? true : false,
                               hint: 'kendaraan',
                               handle: setModelName,
@@ -382,7 +458,10 @@ class _ServiceBookingState extends State<ServiceBooking> {
                           children: [
                             Tombol(
                               'BOOK NOW!',
-                              () => submitBook(context),
+                              () => makeReservation(
+                                context,
+                                workshopDetail[0],
+                              ),
                               lebar: MediaQuery.of(context).size.width * 0.85,
                             ),
                           ],

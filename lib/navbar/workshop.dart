@@ -1,5 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/popupdialog/kotakpesan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,20 +18,21 @@ class Workshop extends StatefulWidget {
 }
 
 class _WorkshopState extends State<Workshop> {
-  void loadingTrigger() {
-    setState(() {
-      GlobalVar.isLoading = !GlobalVar.isLoading;
-    });
-  }
+  // void loadingTrigger() {
+  //   setState(() {
+  //     GlobalVar.isLoading = !GlobalVar.isLoading;
+  //   });
+  // }
 
-  void getWorkshops() async {
-    loadingTrigger();
+  Future<List<ModelWorkshopDetail>> getWorkshops() async {
+    GlobalVar.listWorkshopDetail.clear();
     GlobalVar.listWorkshopDetail = await GlobalAPI.fetchGetWorkshop(
       'BRANCHSHOP',
     );
     // GlobalVar.latitudeList = [-7.330453856628143, -7.263224495143975];
     // GlobalVar.longitutdeList = [112.74886179025017, 112.68171265415458];
-    loadingTrigger();
+
+    return GlobalVar.listWorkshopDetail;
   }
 
   void workshopDetails(int index, bool status) {
@@ -62,7 +64,6 @@ class _WorkshopState extends State<Workshop> {
     super.initState();
 
     // GlobalFunction.getAppVersion();
-    getWorkshops();
   }
 
   @override
@@ -122,24 +123,38 @@ class _WorkshopState extends State<Workshop> {
             leading: null,
             automaticallyImplyLeading: false,
           ),
-          body: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: (GlobalVar.listWorkshopDetail.isNotEmpty)
-                      ? Column(
-                          children: [
-                            SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.015,
-                            ),
-                            for (int i = 0;
-                                i < GlobalVar.listWorkshopDetail.length;
-                                i++)
-                              InkWell(
+          body: FutureBuilder(
+            future: getWorkshops(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircleLoading());
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('Failed to load data'),
+                );
+              } else {
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.015,
+                          ),
+                          child: Column(
+                            children:
+                                snapshot.data!.asMap().entries.map((entry) {
+                              final int index = entry.key;
+                              final ModelWorkshopDetail workshop = entry.value;
+
+                              return InkWell(
                                 onTap: () => workshopDetails(
-                                  i,
-                                  GlobalVar.listWorkshopDetail[i].isOpen,
+                                  index,
+                                  workshop.isOpen,
                                 ),
                                 child: Container(
                                   height: MediaQuery.of(context).size.height *
@@ -155,9 +170,7 @@ class _WorkshopState extends State<Workshop> {
                                         0.0125,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: (GlobalVar
-                                                .listWorkshopDetail[i].isOpen ==
-                                            true)
+                                    color: (workshop.isOpen == true)
                                         ? Colors.transparent
                                         : Colors.grey[350],
                                     borderRadius: const BorderRadius.all(
@@ -216,8 +229,7 @@ class _WorkshopState extends State<Workshop> {
                                             Align(
                                               alignment: Alignment.bottomLeft,
                                               child: Text(
-                                                GlobalVar
-                                                    .listWorkshopDetail[i].name,
+                                                workshop.name,
                                                 style: const TextStyle(
                                                   fontSize: 17.0,
                                                   fontWeight: FontWeight.bold,
@@ -227,8 +239,7 @@ class _WorkshopState extends State<Workshop> {
                                             Align(
                                               alignment: Alignment.centerLeft,
                                               child: Text(
-                                                GlobalVar.listWorkshopDetail[i]
-                                                    .address,
+                                                workshop.address,
                                                 style: const TextStyle(
                                                   fontSize: 12.5,
                                                 ),
@@ -240,37 +251,22 @@ class _WorkshopState extends State<Workshop> {
                                       const Expanded(
                                         child: Icon(
                                           Icons.arrow_forward_ios_rounded,
-                                          // color: Color(0xFFF59842),
-                                          // color: Color(0xFF99CCFF),
                                           color: Color(0xFFFE0000),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                          ],
-                        )
-                      : SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Location Unavailable',
-                                style: GlobalFont.bigfontMNormal,
-                              ),
-                              Text(
-                                'Hubungi Admin FixUP Moto untuk info lebih lanjut',
-                                style: GlobalFont.middlebigfontM,
-                              ),
-                            ],
+                              );
+                            }).toList(),
                           ),
                         ),
-                ),
-              ),
-            ],
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
           ),
         ),
       );
