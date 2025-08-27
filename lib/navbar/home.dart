@@ -7,17 +7,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/carousel/carousel_notifier.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/home/modify_vehicle.dart';
 import 'package:fixupmoto/pages/home/service_history.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:chewie/chewie.dart';
@@ -409,7 +407,7 @@ class _HomeState extends State<Home> {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    CarouselSlider(
+                                    carousel_slider.CarouselSlider(
                                       items: [
                                         for (int i = 0;
                                             i <
@@ -449,7 +447,7 @@ class _HomeState extends State<Home> {
                                                   ),
                                                 ),
                                       ],
-                                      options: CarouselOptions(
+                                      options: carousel_slider.CarouselOptions(
                                         aspectRatio: 1,
                                         viewportFraction: 1.0,
                                         autoPlay: true,

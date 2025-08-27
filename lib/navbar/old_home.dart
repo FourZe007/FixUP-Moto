@@ -9,7 +9,8 @@ import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/carousel/carousel_notifier.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -548,9 +549,9 @@ class _OldHomeState extends State<OldHome> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        CarouselSlider(
+                        carousel_slider.CarouselSlider(
                           items: getCarouselHeaderItems(context),
-                          options: CarouselOptions(
+                          options: carousel_slider.CarouselOptions(
                             height: MediaQuery.of(context).size.height * 0.425,
                             viewportFraction: 1.0,
                             autoPlay: false,
@@ -558,7 +559,9 @@ class _OldHomeState extends State<OldHome> {
                             //   setState(() => _currentHeader = index);
                             // },
                             onPageChanged: (index, reason) {
-                              if (reason != CarouselPageChangedReason.timed) {
+                              if (reason !=
+                                  carousel_slider
+                                      .CarouselPageChangedReason.timed) {
                                 // Don't update non-autoplay if triggered externally
                                 carouselNotifier.notify(index, _currentHeader);
                                 setState(() => _currentHeader = index);
@@ -609,7 +612,7 @@ class _OldHomeState extends State<OldHome> {
                     child: (controllerList.isNotEmpty)
                         ? Column(
                             children: [
-                              CarouselSlider(
+                              carousel_slider.CarouselSlider(
                                 items: [
                                   for (int i = 0;
                                       i < controllerList.length;
@@ -643,7 +646,7 @@ class _OldHomeState extends State<OldHome> {
                                             ),
                                           ),
                                 ],
-                                options: CarouselOptions(
+                                options: carousel_slider.CarouselOptions(
                                   viewportFraction: 1.0,
                                   autoPlay: true,
                                   onPageChanged: (index, reason) {
