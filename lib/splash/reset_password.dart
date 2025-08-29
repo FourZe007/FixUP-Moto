@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/global/model.dart';
@@ -9,6 +6,7 @@ import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/label_title_static.dart';
 import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -62,65 +60,32 @@ class _ResetPasswordState extends State<ResetPassword> {
       );
       setState(() => GlobalVar.isLoading = true);
       if (list[0].resultMessage == listLogin[0].memberID) {
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'SUCCESS!',
-            message: 'Password berhasil diubah',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.success,
-          ),
+        Fluttertoast.showToast(
+          msg: 'Password berhasil diubah',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
         );
 
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-
-        Navigator.pushReplacementNamed(context, '/init');
+        if (mounted) Navigator.pushReplacementNamed(context, '/init');
       } else {
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'FAILED!',
-            message: 'Password gagal diubah',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.failure,
-          ),
+        Fluttertoast.showToast(
+          msg: 'Password gagal diubah',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
       }
     } else {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'FAILED!',
-          message: 'Password tidak sama',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Password tidak sama',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
@@ -134,10 +99,8 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return true;
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           // backgroundColor: const Color(0xFFF59842),

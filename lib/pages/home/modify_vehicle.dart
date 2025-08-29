@@ -1,10 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'dart:developer';
 import 'package:fixupmoto/widget/carousel/vehicle_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -95,25 +96,15 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
     if ((img!.width == img.height) || (img.width <= img.height)) {
       isLarger = true;
       setState(() {});
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Please use horizontal image',
-          message: '',
 
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Please use horizontal image',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[600] ?? Colors.grey[400],
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     } else {
       isLarger = false;
       images.Image resized = images.copyResize(
@@ -197,72 +188,45 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
 
         Navigator.pop(context);
 
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'SUCCESS!',
-            message: widget.mode == 1
-                ? 'Data Berhasil di Tambah'
-                : 'Data Berhasil di Update',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.success,
-          ),
+        Fluttertoast.showToast(
+          msg: widget.mode == 1
+              ? 'Data Berhasil di Tambah'
+              : 'Data Berhasil di Update',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
       } else {
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'FAILED!',
-            message: listNewVehicle[0].resultMessage,
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.failure,
-          ),
+        Fluttertoast.showToast(
+          msg: listNewVehicle[0].resultMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
       }
     } else {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Mohon periksa input anda kembali',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Mohon periksa input anda kembali',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
   void insertData() {
     if (widget.mode == 2) {
       // Edit Vehicle Data
-      print('Edit Data');
+      log('Edit Data');
 
       plateNo = GlobalVar.listVehicle[widget.index].plateNumber;
       unitID = GlobalVar.listVehicle[widget.index].unitID;
@@ -272,11 +236,11 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
       year = GlobalVar.listVehicle[widget.index].year;
       base64Image = GlobalVar.listVehicle[widget.index].photo;
       line = GlobalVar.listVehicle[widget.index].line;
-      print('Line: $line');
-      print('Image: $base64Image');
+      log('Line: $line');
+      log('Image: $base64Image');
     } else {
       // Insert New Vehicle Data
-      print('Insert Data');
+      log('Insert Data');
     }
   }
 

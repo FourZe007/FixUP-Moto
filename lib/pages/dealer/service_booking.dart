@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/custom_date_picker.dart';
 import 'package:fixupmoto/widget/dropdown/customdropdown.dart';
 import 'package:fixupmoto/widget/dropdown/timeasset_user.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class ServiceBooking extends StatefulWidget {
@@ -94,91 +94,63 @@ class _ServiceBookingState extends State<ServiceBooking> {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
 
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Please keep your booking ID',
-            message: GlobalVar.listReqBook[0].resultMessage,
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.success,
-          ),
+        Fluttertoast.showToast(
+          msg: GlobalVar.listReqBook[0].resultMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black87,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
 
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-
-        String message =
-            '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage} adalah kode booking Anda. Demi Keamanan, jangan bagikan kode ini dan mohon disimpan.';
-
-        mapSendOTP = await GlobalAPI.fetchSendOTP(
-          '62${GlobalUser.phone}',
-          message,
-          'poco-phone',
-          // 'realme-tab',
-          'text',
-        );
+        // ~:Delete later:~
+        // String message =
+        //     '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage} adalah kode booking Anda. Demi Keamanan, jangan bagikan kode ini dan mohon disimpan.';
+        //
+        // mapSendOTP = await GlobalAPI.fetchSendOTP(
+        //   '62${GlobalUser.phone}',
+        //   message,
+        //   'poco-phone',
+        //   // 'realme-tab',
+        //   'text',
+        // );
       } else {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
 
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'FAILED!',
-            message: GlobalVar.listReqBook[0].resultMessage,
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.failure,
-          ),
+        Fluttertoast.showToast(
+          msg: GlobalVar.listReqBook[0].resultMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black87,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
 
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-
-        String message =
-            '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage}.';
-
-        mapSendOTP = await GlobalAPI.fetchSendOTP(
-          '62${GlobalUser.phone}',
-          message,
-          'poco-phone',
-          // 'realme-tab',
-          'text',
-        );
+        // ~:Delete later:~
+        // String message =
+        //     '[FIXUP MOTO] ${GlobalVar.listReqBook[0].resultMessage}.';
+        //
+        // mapSendOTP = await GlobalAPI.fetchSendOTP(
+        //   '62${GlobalUser.phone}',
+        //   message,
+        //   'poco-phone',
+        //   // 'realme-tab',
+        //   'text',
+        // );
       }
     } else {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Please check your input again',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Please check your input again',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black87,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
@@ -198,7 +170,6 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     SystemChrome.setPreferredOrientations([

@@ -61,11 +61,11 @@ class _WorkshopMapsState extends State<WorkshopMaps> {
         children: [
           FlutterMap(
             options: MapOptions(
-              center: LatLng(
+              initialCenter: LatLng(
                 widget.latitudeCoordinate,
                 widget.longitudeCoordinate,
               ),
-              zoom: 15.0,
+              initialZoom: 15.0,
             ),
             children: [
               TileLayer(
@@ -81,7 +81,7 @@ class _WorkshopMapsState extends State<WorkshopMaps> {
                       widget.latitudeCoordinate,
                       widget.longitudeCoordinate,
                     ), // Replace with desired coordinates
-                    builder: (ctx) => const Icon(
+                    child: const Icon(
                       // Icons.pin_drop_rounded,
                       Icons.location_on_rounded,
                       color: Colors.black,

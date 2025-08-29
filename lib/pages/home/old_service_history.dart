@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -7,6 +6,7 @@ import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/home/service_history_details.dart';
 import 'package:fixupmoto/widget/format.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
@@ -32,29 +32,14 @@ class _OldServiceHistoryState extends State<OldServiceHistory> {
     setState(() => isLoadingHistory = false);
 
     if (GlobalVar.listServiceHistory.isEmpty) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Oh Snap!',
-          message:
-              'Kendaraan dengan plat nomor ${GlobalVar.listVehicle[widget.index].plateNumber} tidak mempunyai riwayat service.',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg:
+            'Kendaraan dengan plat nomor ${GlobalVar.listVehicle[widget.index].plateNumber} tidak mempunyai riwayat service.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
       );
-
-      // ignore: use_build_context_synchronously
-      Future<void>.delayed(Duration.zero, () {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      });
     }
   }
 
@@ -73,11 +58,8 @@ class _OldServiceHistoryState extends State<OldServiceHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // Prevent the default back button behavior
-        return true;
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         appBar: AppBar(
           title: Text(

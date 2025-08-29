@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'dart:developer';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -13,6 +13,7 @@ import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -36,24 +37,15 @@ class _LoginState extends State<Login> {
     phoneSharedPrefs = prefs.getString('phonenumber');
 
     if (phoneSharedPrefs!.isEmpty) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Please enter your phone number first',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Please enter your phone number first',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     } else {
       Navigator.push(
         context,
@@ -86,27 +78,17 @@ class _LoginState extends State<Login> {
           await prefs.setInt('flag', 1);
         }
 
-        print('GlobalUser Flag: ${GlobalUser.flag}');
+        log('GlobalUser Flag: ${GlobalUser.flag}');
 
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'LOGIN SUCCESS!',
-            message: 'Please wait for a moment',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.success,
-          ),
+        Fluttertoast.showToast(
+          msg: 'Login Berhasil!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.black,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-        // print(listlogin[0].memo);
 
         setState(() => GlobalVar.isLoading = false);
         Navigator.pushReplacementNamed(context, '/home');
@@ -125,7 +107,6 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     SystemChrome.setPreferredOrientations([
@@ -138,7 +119,6 @@ class _LoginState extends State<Login> {
   void dispose() {
     GlobalVar.loginAlert = '';
 
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -146,24 +126,19 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return DoubleTapToExit(
       snackBar: SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Tap again to exit',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
+        backgroundColor: Colors.grey,
+        content: Text(
+          'Tap again to exit',
+          style: GlobalFont.bigfontR,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(8),
+        behavior: SnackBarBehavior.floating,
       ),
-      child: WillPopScope(
-        onWillPop: () async {
-          // Prevent the default back button behavior
-          return true;
-        },
+      child: PopScope(
+        canPop: false,
         child: GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);

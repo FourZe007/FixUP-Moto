@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'dart:developer';
+
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/global/model.dart';
@@ -8,6 +9,7 @@ import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -24,27 +26,27 @@ class _EditProfileState extends State<EditProfile> {
   List<ModelResultMessage> list = [];
 
   void setName(String value) {
-    print('name before: $name');
+    log('name before: $name');
     name = value;
-    print('name after: $name');
+    log('name after: $name');
   }
 
   void setID(String value) {
-    print('id before: $id');
+    log('id before: $id');
     id = value;
-    print('id after: $id');
+    log('id after: $id');
   }
 
   void setEmail(String value) {
-    print('email before: $email');
+    log('email before: $email');
     email = value;
-    print('email after: $email');
+    log('email after: $email');
   }
 
   void setNumber(String value) {
-    print('number before: $number');
+    log('number before: $number');
     number = value;
-    print('number after: $number');
+    log('number after: $number');
   }
 
   void setUserProfile() {
@@ -59,24 +61,14 @@ class _EditProfileState extends State<EditProfile> {
   void saveProfile() async {
     if (name == GlobalVar.listUserData[0].memberName &&
         email == GlobalVar.listUserData[0].email) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'FAILED!',
-          message: 'Ubah nama dan/atau email anda untuk update profile',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg: 'Ubah nama dan/atau email anda untuk update profile',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     } else {
       list = await GlobalAPI.modifyAccount(
         '2',
@@ -104,43 +96,23 @@ class _EditProfileState extends State<EditProfile> {
         list = [];
         Navigator.pop(context, true);
 
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'SUCCESS!',
-            message: 'Data anda berhasil diupdate',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.success,
-          ),
+        Fluttertoast.showToast(
+          msg: 'Data anda berhasil diupdate',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
       } else {
-        final snackBar = SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'WARNING!',
-            message: list[0].resultMessage,
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.failure,
-          ),
+        Fluttertoast.showToast(
+          msg: list[0].resultMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 16.0,
         );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
       }
     }
   }

@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
@@ -58,23 +57,17 @@ class _MemberState extends State<Member> {
     } else {
       return DoubleTapToExit(
         snackBar: SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'WARNING!',
-            message: 'Tap again to exit',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.warning,
+          backgroundColor: Colors.grey,
+          content: Text(
+            'Tap again to exit',
+            style: GlobalFont.bigfontR,
           ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          margin: const EdgeInsets.all(8),
+          behavior: SnackBarBehavior.floating,
         ),
-        // showIgnore: false,
-        //   showLater: false,
-        //   dialogStyle: UpgradeDialogStyle.cupertino,
-        // ~:UpgradeAlert removed, only available in Login and Home page:~
         child: Scaffold(
           appBar: AppBar(
             // backgroundColor: const Color(0xFFF59842),

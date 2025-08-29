@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:math';
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'dart:math' as math;
+import 'dart:developer';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/account/register.dart';
 import 'package:fixupmoto/global/api.dart';
@@ -11,6 +10,7 @@ import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/label_title_static.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,27 +33,18 @@ class _VerifyAccountState extends State<VerifyAccount> {
 
   void verify() {
     // setState(() => isLoading = true);
-    print('Random Number: ${randomNumber.toString()}');
-    print('User OTP: $otp');
+    log('Random Number: ${randomNumber.toString()}');
+    log('User OTP: $otp');
     if (randomNumber.toString() == otp) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'OTP VERIFIED',
-          message: 'Please wait for a moment',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.success,
-        ),
+      Fluttertoast.showToast(
+        msg: 'OTP verified, please wait for a moment.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black87,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
 
       isVerified = true;
       setState(() {
@@ -80,17 +71,17 @@ class _VerifyAccountState extends State<VerifyAccount> {
 
   void setRandomNumber() {
     // Generate a random number between 1,000 and 9,999
-    randomNumber = Random().nextInt(9000) + 1000;
+    randomNumber = math.Random().nextInt(9000) + 1000;
 
     // Prints the random number, for example: 5,912
-    print('Random Number: $randomNumber');
+    log('Random Number: $randomNumber');
   }
 
   void sendOTP() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     GlobalUser.phone = prefs.getString('phonenumber');
 
-    print('Sent OTP');
+    log('Sent OTP');
 
     if (GlobalUser.phone != '') {
       setRandomNumber();
@@ -107,7 +98,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
         'text',
       );
 
-      print('Send OTP result: ${mapSendOTP.resultMessage}');
+      log('Send OTP result: ${mapSendOTP.resultMessage}');
 
       if (mapSendOTP.resultMessage == 'pending') {
         setState(() {
@@ -139,7 +130,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
       (timer) {
         if (isVerified == false) {
           if (_remainingDuration > 0) {
-            print('Remaining Timer: $_remainingDuration');
+            log('Remaining Timer: $_remainingDuration');
             setState(() {
               _remainingDuration--;
             });
@@ -181,24 +172,19 @@ class _VerifyAccountState extends State<VerifyAccount> {
   Widget build(BuildContext context) {
     return DoubleTapToExit(
       snackBar: SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Tap again to exit',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
+        backgroundColor: Colors.grey,
+        content: Text(
+          'Tap again to exit',
+          style: GlobalFont.bigfontR,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(8),
+        behavior: SnackBarBehavior.floating,
       ),
-      child: WillPopScope(
-        onWillPop: () async {
-          // Prevent the default back button behavior
-          return true;
-        },
+      child: PopScope(
+        canPop: false,
         child: GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);

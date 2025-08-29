@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/button/date_filter_button.dart';
@@ -11,6 +10,7 @@ import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/message/message_details.dart';
 import 'package:fixupmoto/widget/format.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class Messages extends StatefulWidget {
@@ -201,26 +201,13 @@ class _MessagesState extends State<Messages> {
     setIcon();
 
     if (GlobalVar.listNotificationDetail.isEmpty) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Oh Snap!',
-          message: 'No data found',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg: 'No data found',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black87,
+        textColor: Colors.white,
       );
-
-      Future<void>.delayed(Duration.zero, () {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      });
     } else {
       print('Start Date: $startDate');
       print('End Date: $endDate');
@@ -274,23 +261,17 @@ class _MessagesState extends State<Messages> {
     } else {
       return DoubleTapToExit(
         snackBar: SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'WARNING!',
-            message: 'Tap again to exit',
-
-            /// change contentType to ContentType.success,
-            /// ContentType.warning or ContentType.help for variants
-            contentType: ContentType.warning,
+          backgroundColor: Colors.grey,
+          content: Text(
+            'Tap again to exit',
+            style: GlobalFont.bigfontR,
           ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          margin: const EdgeInsets.all(8),
+          behavior: SnackBarBehavior.floating,
         ),
-        // showIgnore: false,
-        //   showLater: false,
-        //   dialogStyle: UpgradeDialogStyle.cupertino,
-        // ~:UpgradeAlert removed, only available in Login and Home page:~
         child: Scaffold(
           appBar: AppBar(
             // backgroundColor: const Color(0xFFF59842),

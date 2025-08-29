@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/pages/home/modify_vehicle.dart';
 import 'package:fixupmoto/widget/image/customimage.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +12,7 @@ import 'package:fixupmoto/pages/home/service_history_details.dart';
 import 'package:fixupmoto/widget/format.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
@@ -38,29 +38,14 @@ class _ServiceHistoryState extends State<ServiceHistory> {
     setState(() => isLoadingHistory = false);
 
     if (GlobalVar.listServiceHistory.isEmpty) {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Oh Snap!',
-          message:
-              'Kendaraan dengan plat nomor ${GlobalVar.listVehicle[widget.index].plateNumber} tidak mempunyai riwayat service.',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg:
+            'Kendaraan dengan plat nomor ${GlobalVar.listVehicle[widget.index].plateNumber} tidak mempunyai riwayat service.',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
       );
-
-      // ignore: use_build_context_synchronously
-      Future<void>.delayed(Duration.zero, () {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      });
     }
   }
 

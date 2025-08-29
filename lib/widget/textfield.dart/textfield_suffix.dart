@@ -1,8 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
 
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:email_otp/email_otp.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class UserTextFieldSuffix extends StatefulWidget {
@@ -31,7 +31,7 @@ class _UserTextFieldSuffixState extends State<UserTextFieldSuffix> {
           ),
           suffixIcon: TextButton(
             onPressed: () async {
-              print('pressed');
+              log('pressed');
               widget.myauth.setConfig(
                 appEmail: "josephangelus.jobs@gmail.com",
                 appName: "Email OTP",
@@ -39,47 +39,23 @@ class _UserTextFieldSuffixState extends State<UserTextFieldSuffix> {
                 otpLength: 4,
                 otpType: OTPType.digitsOnly,
               );
-              final snackBar;
+
               if (await widget.myauth.sendOTP() == true) {
-                snackBar = SnackBar(
-                  /// need to set following properties for best effect of awesome_snackbar_content
-                  elevation: 0,
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.transparent,
-                  content: AwesomeSnackbarContent(
-                    title: 'Success!',
-                    message: 'OTP has been sent',
-
-                    /// change contentType to ContentType.success,
-                    /// ContentType.warning or ContentType.help for variants
-                    contentType: ContentType.failure,
-                  ),
+                Fluttertoast.showToast(
+                  msg: 'OTP has been sent',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
                 );
-
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(snackBar);
               } else {
-                snackBar = SnackBar(
-                  /// need to set following properties for best effect of awesome_snackbar_content
-                  elevation: 0,
-                  duration: const Duration(seconds: 1),
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.transparent,
-                  content: AwesomeSnackbarContent(
-                    title: 'Oops',
-                    message: 'OTP send failed',
-
-                    /// change contentType to ContentType.success,
-                    /// ContentType.warning or ContentType.help for variants
-                    contentType: ContentType.failure,
-                  ),
+                Fluttertoast.showToast(
+                  msg: 'OTP send failed',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
                 );
-
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(snackBar);
               }
             },
             child: const Text(

@@ -1,6 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/account/login.dart';
 import 'package:fixupmoto/account/term_condition.dart';
 import 'package:fixupmoto/account/verify.dart';
@@ -14,6 +12,7 @@ import 'package:fixupmoto/widget/button/button.dart';
 import 'package:fixupmoto/widget/label_title_static.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/widget/textfield.dart/customxuserinput.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:upgrader/upgrader.dart';
@@ -66,24 +65,14 @@ class _SplashContentState extends State<SplashContent> {
   }
 
   void warn() {
-    final snackBar = SnackBar(
-      /// need to set following properties for best effect of awesome_snackbar_content
-      elevation: 0,
-      behavior: SnackBarBehavior.floating,
+    Fluttertoast.showToast(
+      msg: 'Mohon menyetujui pernyataan dan persetujuan terlebih dahulu',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.transparent,
-      content: AwesomeSnackbarContent(
-        title: 'WARNING!',
-        message: 'Mohon menyetujui pernyataan dan persetujuan terlebih dahulu',
-
-        /// change contentType to ContentType.success,
-        /// ContentType.warning or ContentType.help for variants
-        contentType: ContentType.warning,
-      ),
+      textColor: Colors.black,
+      fontSize: 16.0,
     );
-
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(snackBar);
   }
 
   void login() async {
@@ -116,24 +105,14 @@ class _SplashContentState extends State<SplashContent> {
       }
     } else {
       // snackbar cek inputan && format nomor telp
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
+      Fluttertoast.showToast(
+        msg: 'Please check your input again',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'FAILED!',
-          message: 'Please check your input again',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+        textColor: Colors.black,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
@@ -183,18 +162,16 @@ class _SplashContentState extends State<SplashContent> {
 
     return DoubleTapToExit(
       snackBar: SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Tap again to exit',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
+        backgroundColor: Colors.grey,
+        content: Text(
+          'Tap again to exit',
+          style: GlobalFont.bigfontR,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(8),
+        behavior: SnackBarBehavior.floating,
       ),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(

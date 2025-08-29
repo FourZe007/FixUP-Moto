@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
@@ -7,6 +6,7 @@ import 'package:fixupmoto/widget/button/date_filter_button.dart';
 import 'package:fixupmoto/widget/format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class ServiceInvoice extends StatefulWidget {
@@ -33,26 +33,14 @@ class _ServiceInvoiceState extends State<ServiceInvoice> {
 
     if (GlobalVar.memberInvoiceList.isEmpty) {
       GlobalVar.memberInvoiceService = [];
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Oh Snap!',
-          message: 'No data found',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg: 'No data found',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      Future<void>.delayed(Duration.zero, () {
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      });
     } else {
       GlobalVar.memberInvoiceService = [];
       print(GlobalVar.memberInvoiceList.length);

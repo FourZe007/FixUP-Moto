@@ -1,9 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:fixupmoto/widget/carousel/notification_length_notifier.dart';
-// import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fixupmoto/global/global.dart';
@@ -15,6 +13,7 @@ import 'package:fixupmoto/navbar/profile.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/rendering.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,25 +66,13 @@ class _BottomNavBarState extends State<BottomNavBar>
         currentPageIndex = index;
       });
     } else {
-      final snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 1),
-        behavior: SnackBarBehavior.floating,
+      Fluttertoast.showToast(
+        msg: 'Please wait a moment',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Please wait a moment',
-          message: '',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
-        ),
+        textColor: Colors.white,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
@@ -386,15 +373,16 @@ class _BottomNavBarState extends State<BottomNavBar>
       ),
       body: DoubleTapToExit(
         snackBar: SnackBar(
-          /// need to set following properties for best effect of awesome_snackbar_content
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Warning',
-            message: 'Tap again to exit',
-            contentType: ContentType.warning,
+          backgroundColor: Colors.grey,
+          content: Text(
+            'Tap again to exit',
+            style: GlobalFont.bigfontR,
           ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          margin: const EdgeInsets.all(8),
+          behavior: SnackBarBehavior.floating,
         ),
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(

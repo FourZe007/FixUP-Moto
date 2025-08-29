@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
 import 'package:fixupmoto/global/model.dart';
@@ -347,18 +345,16 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return DoubleTapToExit(
       snackBar: SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Tap again to exit',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
+        backgroundColor: Colors.grey,
+        content: Text(
+          'Tap again to exit',
+          style: GlobalFont.bigfontR,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(8),
+        behavior: SnackBarBehavior.floating,
       ),
       child: UpgradeAlert(
         dialogStyle: UpgradeDialogStyle.cupertino,

@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, duplicate_ignore
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-// import 'package:fixupmoto/account/term_condition.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fixupmoto/global/api.dart';
@@ -483,18 +480,16 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return DoubleTapToExit(
       snackBar: SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'WARNING!',
-          message: 'Tap again to exit',
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.warning,
+        backgroundColor: Colors.grey,
+        content: Text(
+          'Tap again to exit',
+          style: GlobalFont.bigfontR,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        margin: const EdgeInsets.all(8),
+        behavior: SnackBarBehavior.floating,
       ),
       child: GestureDetector(
         onTap: () {

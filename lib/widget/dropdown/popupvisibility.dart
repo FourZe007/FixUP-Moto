@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:fixupmoto/global/api.dart';
 import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/global/model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class PopUpVisibility extends StatefulWidget {
@@ -32,48 +30,26 @@ class _PopUpVisibilityState extends State<PopUpVisibility> {
     );
     print(GlobalVar.listRedeemVoucher[0].resultMessage);
 
-    final snackBar;
+    late SnackBar snackBar;
     if (GlobalVar.listRedeemVoucher[0].resultMessage ==
         'POIN ANDA TIDAK MENCUKUPI UNTUK REDEEM VOUCHER INI') {
-      snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Redeem Fail',
-          message: GlobalVar.listRedeemVoucher[0].resultMessage,
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.failure,
-        ),
+      Fluttertoast.showToast(
+        msg: GlobalVar.listRedeemVoucher[0].resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[850],
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     } else {
-      snackBar = SnackBar(
-        /// need to set following properties for best effect of awesome_snackbar_content
-        elevation: 0,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Redeem Success',
-          message: GlobalVar.listRedeemVoucher[0].resultMessage,
-
-          /// change contentType to ContentType.success,
-          /// ContentType.warning or ContentType.help for variants
-          contentType: ContentType.success,
-        ),
+      Fluttertoast.showToast(
+        msg: GlobalVar.listRedeemVoucher[0].resultMessage,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.grey[850],
+        textColor: Colors.white,
+        fontSize: 16.0,
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 
