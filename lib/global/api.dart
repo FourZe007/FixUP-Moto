@@ -192,7 +192,7 @@ class GlobalAPI {
     Map mapOTP = {
       "phone_number": phoneNumber,
       "message": message,
-      "device_id": deviceId,
+      "device_id": 'realme-tab',
       "message_type": messageType,
     };
 
@@ -1142,8 +1142,7 @@ class GlobalAPI {
     var url = Uri.parse('https://fixupmoto-proxy.vercel.app/api/feed/ig');
 
     try {
-      final response =
-          await http.get(url).timeout(const Duration(seconds: 30));
+      final response = await http.get(url).timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         var jsonBody = jsonDecode(response.body);

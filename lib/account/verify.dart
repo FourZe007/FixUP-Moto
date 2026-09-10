@@ -88,7 +88,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
       // give warning if the phone format was wrong
       // NEW
       String message =
-          '[FIXUP MOTO] ${randomNumber.toString()} adalah kode registrasi Anda. Demi Keamanan, jangan bagikan kode ini. Kode ini kadaluarsa dalam 1 menit.';
+          '[FIXUP MOTO] ${randomNumber.toString()} adalah kode verifikasi Anda. Demi Keamanan, jangan bagikan kode ini. Kode ini kadaluarsa dalam 1 menit.';
 
       mapSendOTP = await GlobalAPI.fetchSendOTP(
         '62${GlobalUser.phone}',
