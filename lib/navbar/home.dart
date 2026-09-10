@@ -429,7 +429,7 @@ class _HomeState extends State<Home> {
                                     fit: BoxFit.scaleDown,
                                     child: DotsIndicator(
                                       dotsCount: posts.length,
-                                      position: _currentContent,
+                                      position: _currentContent.toDouble(),
                                       decorator: const DotsDecorator(
                                         size: Size(5.0, 5.0),
                                         activeSize: Size(16.0, 5.0),

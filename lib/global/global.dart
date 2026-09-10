@@ -486,13 +486,15 @@ class GlobalFunction {
     const InitializationSettings initializationSettings =
         InitializationSettings(android: androidSettings);
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      settings: initializationSettings,
+    );
 
     await flutterLocalNotificationsPlugin.show(
-      0,
-      title,
-      body,
-      notificationDetails,
+      id: 0,
+      title: title,
+      body: body,
+      notificationDetails: notificationDetails,
     );
   }
 }

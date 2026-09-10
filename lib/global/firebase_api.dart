@@ -44,8 +44,15 @@ class FirebaseAPI {
     // for a specific device
     // however in the real time apps, probably you want to save this token
     // somewhere in your db along with your user entity, so you can use it later
-    GlobalUser.fCMToken = (await firebaseMessaging.getToken())!;
-    print('Token: ${GlobalUser.fCMToken}');
+    try {
+      GlobalUser.fCMToken = (await firebaseMessaging.getToken()) ?? '';
+      print('Token: ${GlobalUser.fCMToken}');
+    } catch (e) {
+      // On iOS the APNs token may not be available yet (always the case on
+      // the Simulator, and briefly on real devices right after install), so
+      // getToken() throws. Don't let that abort startup.
+      print('Failed to get FCM token: $e');
+    }
 
     // FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 

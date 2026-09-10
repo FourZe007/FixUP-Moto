@@ -19,7 +19,6 @@ String? phone = '';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseAPI().initNotifications();
 
   // runApp(const MyApp());
   runApp(
@@ -28,6 +27,10 @@ void main() async {
       child: const MyApp(),
     ),
   );
+
+  // Runs after the first frame so a slow/failed notification permission
+  // prompt or APNs token wait can never block the UI from showing.
+  FirebaseAPI().initNotifications();
 }
 
 class MyApp extends StatelessWidget {

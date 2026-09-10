@@ -94,17 +94,19 @@ class _MessagesState extends State<Messages> {
     const InitializationSettings initializationSettings =
         InitializationSettings(android: androidSettings);
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      settings: initializationSettings,
+    );
 
     await flutterLocalNotificationsPlugin.show(
-      0,
-      GlobalVar
+      id: 0,
+      title: GlobalVar
           .listNotificationDetail[GlobalVar.listNotificationDetail.length - 1]
           .notifType,
-      GlobalVar
+      body: GlobalVar
           .listNotificationDetail[GlobalVar.listNotificationDetail.length - 1]
           .notif,
-      notificationDetails,
+      notificationDetails: notificationDetails,
     );
   }
 
