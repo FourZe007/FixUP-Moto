@@ -99,6 +99,10 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -123,9 +127,9 @@ class _ResetPasswordState extends State<ResetPassword> {
             children: [
               Container(
                 margin: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.05,
+                  top: safeHeight * 0.05,
                 ),
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: safeHeight * 0.35,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage(
@@ -136,10 +140,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
+                height: safeHeight * 0.01,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: safeHeight * 0.4,
                 // decoration: BoxDecoration(
                 //   border: Border.all(color: Colors.black),
                 // ),
@@ -161,7 +165,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
+                      height: safeHeight * 0.01,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +182,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
+                      height: safeHeight * 0.01,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -195,7 +199,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
+                      height: safeHeight * 0.01,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -219,7 +223,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.05,
+                height: safeHeight * 0.05,
                 // decoration: BoxDecoration(
                 //   border: Border.all(color: Colors.black),
                 // ),

@@ -195,6 +195,10 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -236,7 +240,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
 
               return SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.89,
+                  height: safeHeight * 0.89,
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                   ),
@@ -268,7 +272,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0125,
+                        height: safeHeight * 0.0125,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
@@ -290,7 +294,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0125,
+                        height: safeHeight * 0.0125,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
@@ -302,8 +306,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                               style: TextStyle(fontSize: 15.0),
                             ),
                             SizedBox(
-                              height:
-                                  MediaQuery.of(context).size.height * 0.0125,
+                              height: safeHeight * 0.0125,
                             ),
                             Text(
                               GlobalVar.listUserData.isNotEmpty
@@ -315,7 +318,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0225,
+                        height: safeHeight * 0.0225,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
@@ -335,7 +338,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0225,
+                        height: safeHeight * 0.0225,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
@@ -355,7 +358,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0225,
+                        height: safeHeight * 0.0225,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
@@ -378,7 +381,7 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0225,
+                        height: safeHeight * 0.0225,
                       ),
                       Container(
                         margin: const EdgeInsets.only(
@@ -418,11 +421,11 @@ class _ServiceBookingState extends State<ServiceBooking> {
                         ),
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.0725,
+                        height: safeHeight * 0.0725,
                       ),
                       Container(
                         margin: const EdgeInsets.only(left: 25.0, right: 25.0),
-                        height: MediaQuery.of(context).size.height * 0.05,
+                        height: safeHeight * 0.05,
                         alignment: Alignment.center,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

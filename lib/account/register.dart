@@ -478,6 +478,10 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return DoubleTapToExit(
       snackBar: SnackBar(
         backgroundColor: Colors.grey,
@@ -538,9 +542,9 @@ class _RegisterState extends State<Register> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.725,
+                    height: safeHeight * 0.725,
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.05,
+                      top: safeHeight * 0.05,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -550,7 +554,7 @@ class _RegisterState extends State<Register> {
                           children: [
                             Container(
                               margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.025,
+                                top: safeHeight * 0.025,
                               ),
                               child: LabelTitleStatic(
                                 'REGISTRATION',
@@ -560,7 +564,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
+                          height: safeHeight * 0.01,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -576,7 +580,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.04,
+                          height: safeHeight * 0.04,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -594,7 +598,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
+                          height: safeHeight * 0.02,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -610,7 +614,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
+                          height: safeHeight * 0.02,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -626,7 +630,7 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.04,
+                          height: safeHeight * 0.04,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -647,13 +651,13 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.01,
+                          height: safeHeight * 0.01,
                         ),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.125,
+                    height: safeHeight * 0.125,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

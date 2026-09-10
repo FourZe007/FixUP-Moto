@@ -347,6 +347,38 @@ class ModelFeedsData {
   }
 }
 
+class ModelInstagramPost {
+  String id;
+  String caption;
+  String mediaType;
+  String mediaUrl;
+  String thumbnailUrl;
+  String permalink;
+  String timestamp;
+
+  ModelInstagramPost({
+    required this.id,
+    required this.caption,
+    required this.mediaType,
+    required this.mediaUrl,
+    required this.thumbnailUrl,
+    required this.permalink,
+    required this.timestamp,
+  });
+
+  factory ModelInstagramPost.fromJson(Map<String, dynamic> json) {
+    return ModelInstagramPost(
+      id: json['id'] ?? '',
+      caption: json['caption'] ?? '',
+      mediaType: json['mediaType'] ?? '',
+      mediaUrl: json['mediaUrl'] ?? '',
+      thumbnailUrl: json['thumbnailUrl'] ?? json['mediaUrl'] ?? '',
+      permalink: json['permalink'] ?? '',
+      timestamp: json['timestamp'] ?? '',
+    );
+  }
+}
+
 class ModelAccessToken {
   String accessToken;
   String bearer;

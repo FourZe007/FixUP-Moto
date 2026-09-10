@@ -113,6 +113,14 @@ class _LoginState extends State<Login> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
+    );
   }
 
   @override
@@ -124,6 +132,10 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final double contentHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return DoubleTapToExit(
       snackBar: SnackBar(
         backgroundColor: Colors.grey,
@@ -137,166 +149,175 @@ class _LoginState extends State<Login> {
         margin: const EdgeInsets.all(8),
         behavior: SnackBarBehavior.floating,
       ),
-      child: PopScope(
-        canPop: false,
-        child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+        ),
+        child: PopScope(
+          canPop: false,
+          child: GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
 
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            extendBodyBehindAppBar: true,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: Container(
-                width: 15.0,
-                height: 15.0,
-                margin: const EdgeInsets.only(top: 10.0, left: 10.0),
-                padding: const EdgeInsets.only(left: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(40.0),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              extendBodyBehindAppBar: true,
+              appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Container(
+                  width: 15.0,
+                  height: 15.0,
+                  margin: const EdgeInsets.only(top: 10.0, left: 10.0),
+                  padding: const EdgeInsets.only(left: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(40.0),
                   ),
-                  //replace with our own icon data.
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
+                    //replace with our own icon data.
+                  ),
                 ),
               ),
-            ),
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/login-background.png'),
-                  fit: BoxFit.cover,
+              body: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('./assets/login-background.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.825,
-                      padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.135,
-                                ),
-                                child: LabelTitleStatic(
-                                  'ENTER PASSWORD',
-                                  GlobalFont.titleLoginFontW2,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  left:
-                                      MediaQuery.of(context).size.width * 0.04,
-                                ),
-                                child: const Text(
-                                  'Fill the password field to sign in',
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.03,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CustomUserInput(
-                                setPass,
-                                pass,
-                                mode: 0,
-                                isPass: true,
-                                hint: 'password',
-                                icon: Icons.lock,
-                                autoFocus: true,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.035,
-                              right: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: contentHeight * 0.94,
+                        padding: EdgeInsets.only(
+                          top: contentHeight * 0.05,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text(
-                                  GlobalVar.loginAlert,
-                                  style: const TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: contentHeight * 0.135,
                                   ),
-                                ),
-                                TextButton(
-                                  onPressed: setNewPass,
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: GlobalFont.mediumBigfontRTextButton,
+                                  child: LabelTitleStatic(
+                                    'ENTER PASSWORD',
+                                    GlobalFont.titleLoginFontW2,
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              GlobalVar.isLoading
-                                  ? const CircleLoading()
-                                  : Tombol(
-                                      'SIGN IN',
-                                      login,
-                                      lebar: MediaQuery.of(context).size.width *
-                                          0.9,
+                            SizedBox(
+                              height: contentHeight * 0.01,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                  child: const Text(
+                                    'Fill the password field to sign in',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: contentHeight * 0.03,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CustomUserInput(
+                                  setPass,
+                                  pass,
+                                  mode: 0,
+                                  isPass: true,
+                                  hint: 'password',
+                                  icon: Icons.lock,
+                                  autoFocus: true,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: contentHeight * 0.01,
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.035,
+                                right: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    GlobalVar.loginAlert,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                            ],
-                          ),
-                        ],
+                                  ),
+                                  TextButton(
+                                    onPressed: setNewPass,
+                                    child: Text(
+                                      'Forgot Password?',
+                                      style:
+                                          GlobalFont.mediumBigfontRTextButton,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: contentHeight * 0.08,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GlobalVar.isLoading
+                                    ? const CircleLoading()
+                                    : Tombol(
+                                        'SIGN IN',
+                                        login,
+                                        lebar:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                      ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

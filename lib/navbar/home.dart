@@ -3,7 +3,11 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:double_tap_to_exit/double_tap_to_exit.dart';
+import 'package:fixupmoto/bloc/instagram_feed/instagram_feed_bloc.dart';
+import 'package:fixupmoto/bloc/instagram_feed/instagram_feed_event.dart';
+import 'package:fixupmoto/bloc/instagram_feed/instagram_feed_state.dart';
 import 'package:fixupmoto/global/model.dart';
+import 'package:fixupmoto/pages/home/instagram_reels_viewer.dart';
 import 'package:fixupmoto/widget/carousel/carousel_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel_slider;
@@ -14,13 +18,10 @@ import 'package:fixupmoto/global/global.dart';
 import 'package:fixupmoto/indicator/progress%20bar/circleloading.dart';
 import 'package:fixupmoto/pages/home/modify_vehicle.dart';
 import 'package:fixupmoto/pages/home/service_history.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:chewie/chewie.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
 import 'package:upgrader/upgrader.dart';
-// Install Chiwie to display and play a video!
 
 // ignore: must_be_immutable
 class Home extends StatefulWidget {
@@ -40,21 +41,13 @@ class _HomeState extends State<Home> {
 
   List<ModelResultMessage> listRegistToken = [];
 
-  List<VideoPlayerController> videoPlayerControllerList = [];
-  List<ChewieController> chewieControllerList = [];
-  List<dynamic> tempControllerList = [];
-  List<dynamic> tempControllerListType = [];
-
   List<ModelNotificationDetail> tempNotifDetail = [];
   List<ModelBrowseUser> tempBrowseUser = [];
   String deviceName = '';
   List<ModelBrowseUser> tempUserData = [];
   List<ModelVehicleDetail> tempVehicleList = [];
 
-  String longLivedAccessToken =
-      'IGQWRNUS1scEw2azNvclFBVUVvQ0dpVUkzdnRnbTFKQlZAweXBLMDA5N2NBYjQzczJwYkJVMklxZADZArQmkxSEFCS2pvbUZAlcTI5WlVxc2Y0WV9wVE15RHI5LXlOZATl3QURVSjhzUU9jaHBUZAwZDZD';
-  ModelAccessToken accessTokenModel =
-      ModelAccessToken(accessToken: '', bearer: '', duration: 0);
+  final InstagramFeedBloc _instagramFeedBloc = InstagramFeedBloc();
 
   // Prevent blinking between Auto-Played and Non Auto-Played Carousel
   final carouselNotifier = CarouselChangeNotifier();
@@ -196,52 +189,6 @@ class _HomeState extends State<Home> {
     }
   }
 
-  Future<List<dynamic>> getInstagramData() async {
-    if (GlobalVar.listUserData.isNotEmpty) {
-      videoPlayerControllerList = [];
-      print('Get Instagram Feeds');
-      GlobalVar.listFeeds = [];
-
-      if (DateTime.now().day == 28) {
-        accessTokenModel =
-            await GlobalAPI.fetchGetNewAccessToken(longLivedAccessToken);
-
-        longLivedAccessToken = accessTokenModel.accessToken;
-      }
-
-      GlobalVar.listFeeds
-          .addAll(await GlobalAPI.fetchGetFeeds(longLivedAccessToken));
-      videoPlayerControllerList = [];
-      tempControllerList = [];
-      tempControllerListType = [];
-
-      for (int i = 0; i < GlobalVar.listFeeds.length; i++) {
-        if (GlobalVar.listFeeds[i].mediatype == 'VIDEO' &&
-            tempControllerList.length < 3) {
-          VideoPlayerController controller = VideoPlayerController.networkUrl(
-              Uri.parse(GlobalVar.listFeeds[i].mediaurl));
-          await controller.initialize();
-          videoPlayerControllerList.add(controller);
-          tempControllerList.add(
-            ChewieController(
-              videoPlayerController: controller,
-              // Chewie options
-            ),
-          );
-          tempControllerListType.add('video');
-        } else if (GlobalVar.listFeeds[i].mediatype == 'IMAGE' &&
-            tempControllerList.length < 3) {
-          tempControllerList.add(GlobalVar.listFeeds[i].mediaurl.toString());
-          tempControllerListType.add('image');
-        }
-      }
-
-      return [tempControllerList, tempControllerListType];
-    } else {
-      return [];
-    }
-  }
-
   Future<List<ModelNotificationDetail>> getNotification() async {
     tempNotifDetail = await GlobalAPI.fetchGetNotification('', '0');
 
@@ -297,9 +244,6 @@ class _HomeState extends State<Home> {
       GlobalUser.deviceName = '';
       GlobalVar.listUserData = [];
       GlobalVar.listVehicle = [];
-      GlobalVar.controllerList = [];
-      GlobalVar.controllerListLink = [];
-      GlobalVar.controllerListType = [];
 
       GlobalVar.listNotificationDetail.addAll(await getNotification());
       GlobalUser.deviceName = await getDevice();
@@ -312,9 +256,10 @@ class _HomeState extends State<Home> {
 
       GlobalVar.listUserData.addAll(await getUserData());
       GlobalVar.listVehicle.addAll(await getVehicle());
-      GlobalVar.controllerList.addAll(await getInstagramData());
-      GlobalVar.controllerListLink.addAll(GlobalVar.controllerList[0]);
-      GlobalVar.controllerListType.addAll(GlobalVar.controllerList[1]);
+
+      if (GlobalVar.listUserData.isNotEmpty) {
+        _instagramFeedBloc.add(const InstagramFeedRequested());
+      }
     }
     loadingTrigger();
   }
@@ -331,11 +276,9 @@ class _HomeState extends State<Home> {
     // TODO: implement dispose
     super.dispose();
 
+    _instagramFeedBloc.close();
     GlobalVar.listVehicle = [];
-    GlobalVar.listFeeds = [];
     tempBrowseUser = [];
-    tempControllerList = [];
-    tempControllerListType = [];
     tempNotifDetail = [];
     tempUserData = [];
     tempVehicleList = [];
@@ -377,121 +320,160 @@ class _HomeState extends State<Home> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      (GlobalVar.controllerListLink.isNotEmpty)
-                          ? InkWell(
-                              onTap: () {
-                                launchUrl(
-                                  Uri.parse(
-                                    'https://www.instagram.com/fixupmotoidn_official/',
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.375,
-                                width:
-                                    MediaQuery.of(context).size.width * 0.925,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.of(context).size.width * 0.015,
-                                  vertical: MediaQuery.of(context).size.height *
-                                      0.015,
-                                ),
-                                decoration: BoxDecoration(
-                                    color: const Color(0xFFFE0000),
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    carousel_slider.CarouselSlider(
-                                      items: [
-                                        for (int i = 0;
-                                            i <
-                                                GlobalVar
-                                                    .controllerListLink.length;
-                                            i++)
-                                          (GlobalVar.controllerListType[i] ==
-                                                  'video')
-                                              ? Chewie(
-                                                  controller: GlobalVar
-                                                      .controllerListLink[i],
-                                                )
-                                              : Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                      20.0,
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.06,
+                          vertical: MediaQuery.of(context).size.height * 0.01,
+                        ),
+                        child: Text(
+                          "Latest Updates",
+                          style: GlobalFont.giantfontR,
+                        ),
+                      ),
+                      BlocBuilder<InstagramFeedBloc, InstagramFeedState>(
+                        bloc: _instagramFeedBloc,
+                        builder: (context, feedState) {
+                          if (feedState.status == InstagramFeedStatus.loaded &&
+                              feedState.posts.isNotEmpty) {
+                            final posts = feedState.posts;
+
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.925,
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.015,
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.015,
+                              ),
+                              decoration: BoxDecoration(
+                                  color: const Color(0xFFFE0000),
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  carousel_slider.CarouselSlider(
+                                    items: [
+                                      for (int i = 0; i < posts.length; i++)
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    InstagramReelsViewer(
+                                                  posts: posts,
+                                                  initialIndex: i,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20.0,
+                                                  ),
+                                                  image: DecorationImage(
+                                                    image:
+                                                        CachedNetworkImageProvider(
+                                                      posts[i]
+                                                              .thumbnailUrl
+                                                              .isNotEmpty
+                                                          ? posts[i]
+                                                              .thumbnailUrl
+                                                          : posts[i].mediaUrl,
+                                                      maxHeight: (MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.35)
+                                                          .round()
+                                                          .toInt(),
                                                     ),
-                                                    image: DecorationImage(
-                                                      image:
-                                                          CachedNetworkImageProvider(
-                                                        GlobalVar
-                                                            .controllerListLink[i],
-                                                        maxHeight: (MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.35)
-                                                            .round()
-                                                            .toInt(),
-                                                      ),
-                                                      fit: BoxFit.fill,
-                                                    ),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                      ],
-                                      options: carousel_slider.CarouselOptions(
-                                        aspectRatio: 1,
-                                        viewportFraction: 1.0,
-                                        autoPlay: true,
-                                        onPageChanged: (index, reason) {
-                                          setState(
-                                              () => _currentContent = index);
-                                        },
-                                      ),
-                                    ),
-                                    Positioned(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.05,
-                                      top: MediaQuery.of(context).size.height *
-                                          0.265,
-                                      child: DotsIndicator(
-                                        dotsCount:
-                                            GlobalVar.controllerListLink.length,
-                                        position: _currentContent,
-                                        decorator: const DotsDecorator(
-                                          size: Size(8.0, 8.0),
-                                          activeSize: Size(12.0, 12.0),
-                                          activeColor: Colors.yellow,
-                                          // activeColor: Colors.blue,
-                                          color: Colors.orange,
+                                              ),
+                                              if (posts[i].mediaType == 'VIDEO')
+                                                const Icon(
+                                                  Icons.play_circle_fill,
+                                                  color: Colors.white,
+                                                  size: 50.0,
+                                                ),
+                                            ],
+                                          ),
                                         ),
+                                    ],
+                                    options: carousel_slider.CarouselOptions(
+                                      aspectRatio: 1.4,
+                                      viewportFraction: 1.0,
+                                      autoPlay: true,
+                                      onPageChanged: (index, reason) {
+                                        setState(() => _currentContent = index);
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                            0.015,
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: DotsIndicator(
+                                      dotsCount: posts.length,
+                                      position: _currentContent,
+                                      decorator: const DotsDecorator(
+                                        size: Size(5.0, 5.0),
+                                        activeSize: Size(16.0, 5.0),
+                                        spacing: EdgeInsets.symmetric(
+                                          horizontal: 2.5,
+                                        ),
+                                        color: Colors.white,
+                                        activeColor: Colors.white,
+                                        shape: CircleBorder(),
+                                        activeShape: StadiumBorder(),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.visibility_off_rounded,
-                                    size: 40.0,
-                                  ),
-                                  Text(
-                                    'Unavailable',
-                                    style: GlobalFont.bigfontM,
                                   ),
                                 ],
                               ),
+                            );
+                          }
+
+                          if (feedState.status == InstagramFeedStatus.loading ||
+                              feedState.status == InstagramFeedStatus.initial) {
+                            return SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.2,
+                              child: const Center(child: CircleLoading()),
+                            );
+                          }
+
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.visibility_off_rounded,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  'Unavailable',
+                                  style: GlobalFont.bigfontM,
+                                ),
+                              ],
                             ),
+                          );
+                        },
+                      ),
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
@@ -502,7 +484,7 @@ class _HomeState extends State<Home> {
                           vertical: MediaQuery.of(context).size.height * 0.01,
                         ),
                         child: Text(
-                          "Bikes",
+                          "My Bikes",
                           style: GlobalFont.giantfontR,
                         ),
                       ),
@@ -543,8 +525,11 @@ class _HomeState extends State<Home> {
                                     setState(() => GlobalVar.listVehicle);
                                   },
                                   child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.115,
+                                    constraints: BoxConstraints(
+                                      minHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.115,
+                                    ),
                                     margin: EdgeInsets.symmetric(
                                       horizontal:
                                           MediaQuery.of(context).size.width *
@@ -557,6 +542,9 @@ class _HomeState extends State<Home> {
                                       horizontal:
                                           MediaQuery.of(context).size.width *
                                               0.05,
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              0.015,
                                     ),
                                     decoration: BoxDecoration(
                                       color: const Color(0xFFFE0000),
@@ -606,6 +594,10 @@ class _HomeState extends State<Home> {
                                                             flex: 4,
                                                             child: Text(
                                                               'FIXUP MOTO',
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               style: GlobalFont
                                                                   .middlegiantfontM,
                                                             ),
@@ -617,6 +609,10 @@ class _HomeState extends State<Home> {
                                                                   .listVehicle[
                                                                       i]
                                                                   .unitID,
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               style: GlobalFont
                                                                   .middlegiantfontM,
                                                             ),
@@ -646,11 +642,19 @@ class _HomeState extends State<Home> {
                                                           GlobalVar
                                                               .listVehicle[i]
                                                               .plateNumber,
+                                                          maxLines: 1,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
                                                           style: GlobalFont
                                                               .middlegiantfontM,
                                                         )
                                                       : Text(
                                                           '${GlobalVar.listVehicle[i].color} - ${GlobalVar.listVehicle[i].plateNumber}',
+                                                          maxLines: 1,
+                                                          overflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
                                                           style: GlobalFont
                                                               .middlegiantfontM,
                                                         ),

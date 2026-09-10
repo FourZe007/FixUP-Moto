@@ -67,6 +67,10 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return PopScope(
       canPop: false,
       child: GestureDetector(
@@ -180,7 +184,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.46,
+                  height: safeHeight * 0.46,
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(

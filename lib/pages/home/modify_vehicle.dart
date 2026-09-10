@@ -303,6 +303,9 @@ class MmodifyVehicleState extends State<ModifyVehicle> {
             ),
           ),
           body: SingleChildScrollView(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -133,6 +133,10 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     if (GlobalVar.isLoading == true) {
       return const Center(child: CircleLoading());
     } else {
@@ -277,7 +281,7 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.35,
+                    height: safeHeight * 0.35,
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(

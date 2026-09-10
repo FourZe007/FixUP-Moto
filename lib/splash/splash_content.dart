@@ -142,6 +142,14 @@ class _SplashContentState extends State<SplashContent> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarColor: Colors.transparent,
+    //     statusBarIconBrightness: Brightness.dark,
+    //     statusBarBrightness: Brightness.light,
+    //   ),
+    // );
   }
 
   @override
@@ -160,6 +168,10 @@ class _SplashContentState extends State<SplashContent> {
   Widget build(BuildContext context) {
     GlobalVar.isLoading = false;
 
+    final double contentHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return DoubleTapToExit(
       snackBar: SnackBar(
         backgroundColor: Colors.grey,
@@ -175,7 +187,9 @@ class _SplashContentState extends State<SplashContent> {
       ),
       child: AnnotatedRegion<SystemUiOverlayStyle>(
         value: const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
         ),
         child: GestureDetector(
           onTap: () {
@@ -189,9 +203,6 @@ class _SplashContentState extends State<SplashContent> {
             showIgnore: false,
             showLater: false,
             dialogStyle: UpgradeDialogStyle.cupertino,
-            // upgrader: Upgrader(
-            //   debugDisplayAlways: true,
-            // ),
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               extendBodyBehindAppBar: true,
@@ -219,10 +230,10 @@ class _SplashContentState extends State<SplashContent> {
                       Container(
                         height:
                             (GlobalUser.isNew == true && GlobalUser.flag == 0)
-                                ? MediaQuery.of(context).size.height * 0.86
-                                : MediaQuery.of(context).size.height * 0.925,
+                                ? contentHeight * 0.86
+                                : contentHeight * 0.925,
                         padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.05,
+                          top: contentHeight * 0.05,
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -232,8 +243,7 @@ class _SplashContentState extends State<SplashContent> {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.125,
+                                    top: contentHeight * 0.125,
                                   ),
                                   child: LabelTitleStatic(
                                     'LOGIN OR REGISTER',
@@ -243,7 +253,7 @@ class _SplashContentState extends State<SplashContent> {
                               ],
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.01,
+                              height: contentHeight * 0.01,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -260,7 +270,7 @@ class _SplashContentState extends State<SplashContent> {
                               ],
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.03,
+                              height: contentHeight * 0.03,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -281,21 +291,18 @@ class _SplashContentState extends State<SplashContent> {
                       Container(
                         height:
                             (GlobalUser.isNew == true && GlobalUser.flag == 0)
-                                ? MediaQuery.of(context).size.height * 0.14
-                                : MediaQuery.of(context).size.height * 0.075,
+                                ? contentHeight * 0.16
+                                : contentHeight * 0.075,
                         decoration: BoxDecoration(
                           color:
                               (GlobalUser.isNew == true && GlobalUser.flag == 0)
                                   ? Colors.white70
                                   : Colors.transparent,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(20),
                           ),
                         ),
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).size.height * 0.01,
-                        ),
+                        padding: EdgeInsets.only(bottom: contentHeight * 0.01),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -305,9 +312,7 @@ class _SplashContentState extends State<SplashContent> {
                                 ? Container(
                                     alignment: Alignment.bottomCenter,
                                     margin: EdgeInsets.symmetric(
-                                      vertical:
-                                          MediaQuery.of(context).size.height *
-                                              0.01,
+                                      vertical: contentHeight * 0.01,
                                       horizontal:
                                           MediaQuery.of(context).size.width *
                                               0.01,

@@ -170,6 +170,10 @@ class _VerifyAccountState extends State<VerifyAccount> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return DoubleTapToExit(
       snackBar: SnackBar(
         backgroundColor: Colors.grey,
@@ -235,9 +239,9 @@ class _VerifyAccountState extends State<VerifyAccount> {
                   children: [
                     Container(
                       // color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.67,
+                      height: safeHeight * 0.67,
                       padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.05,
+                        top: safeHeight * 0.05,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -252,7 +256,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                             ],
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
+                            height: safeHeight * 0.01,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -269,7 +273,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                             ],
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.1,
+                            height: safeHeight * 0.1,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -292,7 +296,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                             ],
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.04,
+                            height: safeHeight * 0.04,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -314,7 +318,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                             ],
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.01,
+                            height: safeHeight * 0.01,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -348,8 +352,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                               Container(
                                 alignment: Alignment.center,
                                 width: MediaQuery.of(context).size.width * 0.2,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
+                                height: safeHeight * 0.04,
                                 margin: EdgeInsets.only(
                                   left:
                                       MediaQuery.of(context).size.width * 0.035,
@@ -382,7 +385,7 @@ class _VerifyAccountState extends State<VerifyAccount> {
                     ),
                     SizedBox(
                       // color: Colors.white,
-                      height: MediaQuery.of(context).size.height * 0.18,
+                      height: safeHeight * 0.18,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

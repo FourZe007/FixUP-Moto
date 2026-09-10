@@ -172,6 +172,10 @@ class _ResetVerificationState extends State<ResetVerification> {
 
   @override
   Widget build(BuildContext context) {
+    final double safeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.bottom -
+        16;
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -197,9 +201,9 @@ class _ResetVerificationState extends State<ResetVerification> {
             children: [
               Container(
                 // color: Colors.white,
-                height: MediaQuery.of(context).size.height * 0.67,
+                height: safeHeight * 0.67,
                 padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.05,
+                  top: safeHeight * 0.05,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -229,7 +233,7 @@ class _ResetVerificationState extends State<ResetVerification> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.05,
+                      height: safeHeight * 0.05,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -251,7 +255,7 @@ class _ResetVerificationState extends State<ResetVerification> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.04,
+                      height: safeHeight * 0.04,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -272,7 +276,7 @@ class _ResetVerificationState extends State<ResetVerification> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.01,
+                      height: safeHeight * 0.01,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -304,7 +308,7 @@ class _ResetVerificationState extends State<ResetVerification> {
                         Container(
                           alignment: Alignment.center,
                           width: MediaQuery.of(context).size.width * 0.2,
-                          height: MediaQuery.of(context).size.height * 0.04,
+                          height: safeHeight * 0.04,
                           margin: EdgeInsets.only(
                             left: MediaQuery.of(context).size.width * 0.035,
                           ),
@@ -335,7 +339,7 @@ class _ResetVerificationState extends State<ResetVerification> {
               ),
               SizedBox(
                 // color: Colors.white,
-                height: MediaQuery.of(context).size.height * 0.18,
+                height: safeHeight * 0.18,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

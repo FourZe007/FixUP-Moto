@@ -1138,6 +1138,29 @@ class GlobalAPI {
     }
   }
 
+  static Future<List<ModelInstagramPost>> fetchInstagramFeed() async {
+    var url = Uri.parse('https://fixupmoto-proxy.vercel.app/api/feed/ig');
+
+    try {
+      final response =
+          await http.get(url).timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        var jsonBody = jsonDecode(response.body);
+        List<dynamic> posts = jsonBody['posts'] ?? [];
+
+        return posts
+            .map<ModelInstagramPost>(
+                (data) => ModelInstagramPost.fromJson(data))
+            .toList();
+      }
+
+      return [];
+    } catch (e) {
+      return throw e;
+    }
+  }
+
   static Future<List<ModelMemberInvoice>> fetchGetMemberInvoice(
     String kode,
     String beginDate,

@@ -27,9 +27,6 @@ class GlobalVar {
   // About Apps - Shared Preference
   static String currentAppVersion = '';
 
-  static List<dynamic> controllerList = [];
-  static List<dynamic> controllerListLink = [];
-  static List<dynamic> controllerListType = [];
   static List<ModelResultMessage> listRegister = [];
   static List<ModelWorkshopDetail> listWorkshopDetail = [];
   static List<ModelBrowseUser> listUserData = [];
