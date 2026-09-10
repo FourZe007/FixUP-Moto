@@ -571,7 +571,7 @@ class _OldHomeState extends State<OldHome> {
                         ),
                         DotsIndicator(
                           dotsCount: getCarouselHeaderItems(context).length,
-                          position: _currentHeader,
+                          position: 0,
                           decorator: const DotsDecorator(
                             size: Size(8.0, 8.0),
                             activeSize: Size(12.0, 12.0),
@@ -664,7 +664,7 @@ class _OldHomeState extends State<OldHome> {
                               ),
                               DotsIndicator(
                                 dotsCount: controllerList.length,
-                                position: _currentContent,
+                                position: 0,
                                 decorator: const DotsDecorator(
                                   size: Size(8.0, 8.0),
                                   activeSize: Size(12.0, 12.0),
